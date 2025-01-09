@@ -12,7 +12,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        GameLoop gameLoop = new GameLoop();
+        GameEngine gameLoop = new GameEngine();
         Scene scene = new Scene(gameLoop);
 
         primaryStage.setTitle("Tank Game");

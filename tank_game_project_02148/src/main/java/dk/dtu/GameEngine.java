@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-public class GameLoop extends Pane implements Runnable {
+public class GameEngine extends Pane implements Runnable {
     private final int rows = 12;
     private final int cols = 16;
     private final int originalTileSize = 16;
@@ -19,16 +19,21 @@ public class GameLoop extends Pane implements Runnable {
     private Thread gameThread;
     private Player player;
     private GraphicsContext gc;
+    private InputHandler inputHandler;
 
-    public GameLoop() {
+    public GameEngine() {
         this.setPrefSize(screenWidth, screenHeight);
         this.setStyle("-fx-background-color: lightgrey;");
 
         canvas = new Canvas(screenWidth, screenHeight);
         gc = canvas.getGraphicsContext2D();
+        inputHandler = new InputHandler();
+
+        this.setOnKeyPressed(inputHandler);
+        this.setOnKeyReleased(inputHandler);
 
         this.getChildren().add(canvas);
-        player = new Player("Player1", 100, 100);
+        player = new Player(inputHandler,"Player1", 100, 100);
         startGameThread();
     }
 
