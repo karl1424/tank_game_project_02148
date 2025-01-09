@@ -21,6 +21,8 @@ public class GameEngine extends Pane implements Runnable {
     private GraphicsContext gc;
     private InputHandler inputHandler;
 
+    private Client client;
+
     public GameEngine() {
         this.setPrefSize(screenWidth, screenHeight);
         this.setStyle("-fx-background-color: lightgrey;");
@@ -33,7 +35,9 @@ public class GameEngine extends Pane implements Runnable {
         this.setOnKeyReleased(inputHandler);
 
         this.getChildren().add(canvas);
-        player = new Player(inputHandler,"Player1", 100, 100);
+        
+        client = new Client(inputHandler);
+        //player = new Player(inputHandler,"Player1", 100, 100);
         startGameThread();
     }
 
@@ -73,12 +77,14 @@ public class GameEngine extends Pane implements Runnable {
     }
 
     private void update() {
-        player.update();
+        client.getPlayer().update();
+        client.sendCoordinate();
+        client.recieveCoordinates();
     }
 
     private void repaint(GraphicsContext gc) {
         gc.setFill(Color.LIGHTGRAY);
         gc.fillRect(0, 0, screenWidth, screenHeight);
-        player.repaint(gc);
+        client.getPlayer().repaint(gc);
     }
 }

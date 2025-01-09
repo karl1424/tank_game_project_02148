@@ -6,17 +6,15 @@ import javafx.scene.paint.Color;
 public class Player {
     private InputHandler inputHandler;
     private String playerName;
-    private double x;
-    private double y;
+    private double x = 100.0;
+    private double y = 100.0;
 
     private double angle = 0.0;
     private double angleSpeed = 6.0;
     private double speed = 5.0;
 
-    public Player(InputHandler inputHandler, String playerName, double x, double y) {
+    public Player(InputHandler inputHandler, String playerName) {
         this.playerName = playerName;
-        this.x = x;
-        this.y = y;
         this.inputHandler = inputHandler;
     }
 
@@ -49,5 +47,12 @@ public class Player {
         gc.fillRect(-10, -10, 20, 20);
 
         gc.restore();
+    }
+
+    public double getX(){
+        return x;
+    }
+    public double getY(){
+        return y;
     }
 }
