@@ -17,7 +17,8 @@ public class Client {
     private InputHandler inputHandler;
     private Boolean offlineTest = false;
     private Space server;
-    private Space lobby;
+    private Space lobbySend;
+    private Space lobbyGet;
     private GameEngine ge;
 
     private double prevX;
@@ -42,7 +43,7 @@ public class Client {
         opponentImage = new Image("file:res/tank1.png");
 
         // Connect to server
-        if (true) {
+        if (false) {
             try {
                 String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
                 server = new RemoteSpace(uri);
@@ -55,8 +56,10 @@ public class Client {
         // Connect to lobby
         if (!offlineTest) {
             try {
-                String uri = "tcp://" + host + ":" + port + "/" + lobbyID + "?conn";
-                lobby = new RemoteSpace(uri);
+                String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID+"player1" + "?conn";
+                String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID+"player2" + "?conn";
+                lobbySend = new RemoteSpace(uri1);
+                lobbyGet = new RemoteSpace(uri2);
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -79,7 +82,7 @@ public class Client {
     public void sendCoordinate() {
         if (prevX != player.getX() || prevY != player.getY() || prevAngle != player.getAngle()) {
             try {
-                lobby.put(playername, player.getX(), player.getY(), player.getAngle());
+                lobbySend.put(playername, player.getX(), player.getY(), player.getAngle());
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -91,7 +94,7 @@ public class Client {
 
     public void recieveCoordinates() {
         try {
-            coordinates = lobby.queryp(new FormalField(String.class), new ActualField("Player2"),
+            coordinates = lobbyGet.queryp(new ActualField("Player2"),
                     new FormalField(Double.class), new FormalField(Double.class), new FormalField(Double.class));
             if (coordinates != null) {
                 System.out.println(coordinates[1] + ": " + "x = " + coordinates[2].toString() + ", y = "

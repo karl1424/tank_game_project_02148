@@ -20,8 +20,9 @@ public class Server {
         while (true) {
             try {
                 lobbyRequests.get(new ActualField("host"), new FormalField(Integer.class));
-                serverSpace.add(lobbyID+"", new StackSpace());
-                new Thread(new lobbyHandeler(IP, port, lobbyID++)).start();
+                serverSpace.add(lobbyID+"player1", new StackSpace());
+                serverSpace.add(lobbyID+"player2", new StackSpace());
+                //new Thread(new lobbyHandeler(IP, port, lobbyID++)).start();
                 System.out.println("lobby: "+(lobbyID-1)+" started");
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -45,7 +46,9 @@ class lobbyHandeler implements Runnable {
 
     public void run() {
         try {
-            RemoteSpace lobbySpace = new RemoteSpace("tcp://" + IP + ":" + port + "/"+lobbyID+"?conn");
+            RemoteSpace player1Coords = new RemoteSpace("tcp://" + IP + ":" + port + "/"+lobbyID+"player1"+"?conn");
+            RemoteSpace player2Coords = new RemoteSpace("tcp://" + IP + ":" + port + "/"+lobbyID+"player2"+"?conn");
+            /* 
             while (true) {
                 Object [] position = lobbySpace.getp(new FormalField(String.class),new FormalField(Double.class),new FormalField(Double.class), new FormalField(Double.class));
                 if (position != null) {
@@ -53,7 +56,8 @@ class lobbyHandeler implements Runnable {
                     lobbySpace.put("Server",position[0],position[1],position[2], position[3]);
                 }
             }
-        } catch (IOException | InterruptedException e) {
+            */
+        } catch (IOException e) {
             e.printStackTrace();
         }
     } 

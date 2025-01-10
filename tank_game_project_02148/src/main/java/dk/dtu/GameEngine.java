@@ -61,7 +61,6 @@ public class GameEngine extends Pane implements Runnable {
 
             if (delta >= 1) {
                 new Thread(()-> update()).start();
-                update();
                 repaint(gc);
                 delta--;
                 drawCount++;
