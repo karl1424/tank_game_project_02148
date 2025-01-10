@@ -23,6 +23,8 @@ public class Player {
     private double previousX;
     private double previousY;
 
+    private Projectile projectile;
+
     public Player(GameEngine ge, InputHandler inputHandler, String playerName) {
         this.ge = ge;
         this.playerName = playerName;
@@ -62,6 +64,22 @@ public class Player {
         if (inputHandler.downPressed) {
             x -= Math.cos(angleRadians) * speed;
             y -= Math.sin(angleRadians) * speed;
+        }
+
+        if(inputHandler.shootPressed && projectile == null) {
+            double offset = ge.tileSize;
+            
+            double projectileX = x + Math.cos(angleRadians)*offset + ge.tileSize;
+            double projectileY = y + Math.sin(angleRadians)*offset + ge.tileSize;
+
+            projectile = new Projectile(projectileX, projectileY, angle,ge.tileSize);
+        }
+        
+        if(projectile != null) {
+            projectile.update(hitbox,ge.grid.getGrid());
+            if(!projectile.isActive()) {
+                projectile = null;
+            }
         }
 
         updateHitbox();
@@ -109,8 +127,12 @@ public class Player {
 
         gc.setFill(Color.BLUE);
         gc.drawImage(playerImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
-
+        
         gc.restore();
+
+        if(projectile != null) {
+            projectile.repaint(gc);
+        }
     }
 
     public Rectangle getHitbox() {
@@ -123,5 +145,9 @@ public class Player {
 
     public double getY() {
         return y;
+    }
+
+    public double getAngle(){
+        return angle;
     }
 }
