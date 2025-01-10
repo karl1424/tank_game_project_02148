@@ -7,7 +7,7 @@ import org.jspace.*;
 
 public class Server {
     public static void main(String[] args) throws UnknownHostException, IOException {
-        final String IP = "10.134.17.47";
+        final String IP = "localhost";
         final String port = "31145";
         int lobbyID = 0;
         SpaceRepository serverSpace = new SpaceRepository();
@@ -35,7 +35,7 @@ class lobbyHandeler implements Runnable {
     private int lobbyID;
     private int players;
     
-    final String IP = "10.134.17.47";
+    final String IP = "localhost";
     final String port = "31145";
 
     public lobbyHandeler(int lobbyID, int players) {
@@ -47,14 +47,14 @@ class lobbyHandeler implements Runnable {
         try {
             RemoteSpace lobbySpace = new RemoteSpace("tcp://" + IP + ":" + port + "/"+lobbyID+"?conn");
             while (true) {
-                Object [] position = lobbySpace.getp(new FormalField(String.class),new FormalField(Double.class),new FormalField(Double.class));
+                Object [] position = lobbySpace.getp(new FormalField(String.class),new FormalField(Double.class),new FormalField(Double.class), new FormalField(Double.class));
                 if (position != null) {
-                    System.out.println(position[0].toString()+": x:"+(double) position[1]+" y:"+(double) position[2]);
-                    lobbySpace.put("Server",position[0],position[1],position[2]);
+                    System.out.println(position[0].toString()+": x:"+(double) position[1]+" y:"+(double) position[2]+" angle:"+(double) position[3]);
+                    lobbySpace.put("Server",position[0],position[1],position[2], position[3]);
                 }
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-    }
+    } 
 }

@@ -76,8 +76,8 @@ public class GameEngine extends Pane implements Runnable {
 
     private void update() {
         client.getPlayer().update();
-        // client.sendCoordinate();
-        // client.recieveCoordinates();
+        client.sendCoordinate();
+        client.recieveCoordinates();
     }
 
     private void repaint(GraphicsContext gc) {
@@ -85,7 +85,10 @@ public class GameEngine extends Pane implements Runnable {
         gc.fillRect(0, 0, screenWidth, screenHeight);
         grid.drawGrid(gc);
         client.getPlayer().repaint(gc);
+        client.drawOpponent(gc);
 
+        
+        
         /*if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
             this.getChildren().add(client.getPlayer().getHitbox());
         }*/

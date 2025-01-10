@@ -81,20 +81,7 @@ public class Player {
 
     private boolean checkCollision() {
         boolean check = false;
-        int[][] grid = ge.grid.getGrid();
-        double x = hitbox.getX();
-        double y = hitbox.getY();
-        double width = hitbox.getWidth();
-        double height = hitbox.getHeight();
-
-        int y1 = (int) (x / ge.tileSize);
-        int y2 = (int) ((x + width) / ge.tileSize);
-        int x1 = (int) (y / ge.tileSize);
-        int x2 = (int) ((y + height) / ge.tileSize);
-
-        if (grid[x1][y1] == 1 || grid[x1][y2] == 1 || grid[x2][y1] == 1 || grid[x2][y2] == 1) {
-            check = true;
-        }
+        
 
         return check;
     }
@@ -120,5 +107,9 @@ public class Player {
 
     public double getY() {
         return y;
+    }
+
+    public double getAngle(){
+        return angle;
     }
 }
