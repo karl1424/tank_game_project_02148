@@ -43,7 +43,7 @@ public class Client {
         opponentImage = new Image("file:res/tank1.png");
 
         // Connect to server
-        if (false) {
+        if (true) {
             try {
                 String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
                 server = new RemoteSpace(uri);
@@ -97,12 +97,12 @@ public class Client {
             coordinates = lobbyGet.queryp(new ActualField("Player2"),
                     new FormalField(Double.class), new FormalField(Double.class), new FormalField(Double.class));
             if (coordinates != null) {
-                System.out.println(coordinates[1] + ": " + "x = " + coordinates[2].toString() + ", y = "
-                        + coordinates[3].toString() + ", angle = "
-                        + coordinates[4].toString());
-                opponentPrevX = (double) coordinates[2];
-                opponentPrevY = (double) coordinates[3];
-                opponentPrevAngle = (double) coordinates[4];
+                System.out.println(coordinates[0] + ": " + "x = " + coordinates[2].toString() + ", y = "
+                        + coordinates[2].toString() + ", angle = "
+                        + coordinates[3].toString());
+                opponentPrevX = (double) coordinates[1];
+                opponentPrevY = (double) coordinates[2];
+                opponentPrevAngle = (double) coordinates[3];
             }
 
         } catch (Exception e) {
@@ -113,8 +113,8 @@ public class Client {
     public void drawOpponent(GraphicsContext gc) {
         if (coordinates != null) {
             gc.save();
-            gc.translate((double) coordinates[2] + ge.tileSize, (double) coordinates[3] + ge.tileSize);
-            gc.rotate((double) coordinates[4]);
+            gc.translate((double) coordinates[1] + ge.tileSize, (double) coordinates[2] + ge.tileSize);
+            gc.rotate((double) coordinates[3]);
 
             gc.setFill(Color.BLUE);
             gc.drawImage(opponentImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
