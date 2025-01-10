@@ -19,9 +19,9 @@ public class Server {
         
         while (true) {
             try {
-                Object[] request = lobbyRequests.get(new ActualField("host"), new FormalField(Integer.class));
-                serverSpace.add(lobbyID+"", new SequentialSpace());
-                new Thread(new lobbyHandeler(lobbyID++,(int) request[1])).start();
+                lobbyRequests.get(new ActualField("host"), new FormalField(Integer.class));
+                serverSpace.add(lobbyID+"", new StackSpace());
+                new Thread(new lobbyHandeler(IP, port, lobbyID++)).start();
                 System.out.println("lobby: "+(lobbyID-1)+" started");
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -32,15 +32,15 @@ public class Server {
 }
 
 class lobbyHandeler implements Runnable {
+    private String IP;
+    private String port;
     private int lobbyID;
-    private int players;
-    
-    final String IP = "localhost";
-    final String port = "31145";
 
-    public lobbyHandeler(int lobbyID, int players) {
+
+    public lobbyHandeler(String IP, String port, int lobbyID) {
+        this.IP = IP;
+        this.port = port;
         this.lobbyID = lobbyID;
-        this.players = players;
     }
 
     public void run() {
