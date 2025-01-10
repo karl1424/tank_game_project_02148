@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 
 public class Client {
     private Player player;
-    private String playername = "Player2";
+    private String playername = "Player1";
     private InputHandler inputHandler;
     private Boolean offlineTest = false;
     private Space server;
@@ -22,6 +22,7 @@ public class Client {
 
     private double prevX;
     private double prevY;
+    private double prevAngle;
 
     Object[] coordinates;
     private Image opponentImage;
@@ -35,13 +36,13 @@ public class Client {
         this.inputHandler = inputHandler;
 
         int port = 31145;
-        String host = "localhost";
+        String host = "10.134.17.47";
         int lobbyID = 0;
 
         opponentImage = new Image("file:res/tank1.png");
 
         // Connect to server
-        if (false) {
+        if (true) {
             try {
                 String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
                 server = new RemoteSpace(uri);
@@ -68,6 +69,7 @@ public class Client {
         player = new Player(ge, inputHandler, playername);
         prevX = player.getX();
         prevY = player.getY();
+        prevAngle = player.getAngle();
     }
 
     public Player getPlayer() {
@@ -75,7 +77,7 @@ public class Client {
     }
 
     public void sendCoordinate() {
-        if (prevX != player.getX() || prevY != player.getY()) {
+        if (prevX != player.getX() || prevY != player.getY() || prevAngle != player.getAngle()) {
             try {
                 lobby.put(playername, player.getX(), player.getY(), player.getAngle());
             } catch (Exception e) {
@@ -84,11 +86,12 @@ public class Client {
         }
         prevX = player.getX();
         prevY = player.getY();
+        prevAngle = player.getAngle();
     }
 
     public void recieveCoordinates() {
         try {
-            coordinates = lobby.getp(new FormalField(String.class), new ActualField("Player1"),
+            coordinates = lobby.queryp(new FormalField(String.class), new ActualField("Player2"),
                     new FormalField(Double.class), new FormalField(Double.class), new FormalField(Double.class));
             if (coordinates != null) {
                 System.out.println(coordinates[1] + ": " + "x = " + coordinates[2].toString() + ", y = "

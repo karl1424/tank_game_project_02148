@@ -60,6 +60,7 @@ public class GameEngine extends Pane implements Runnable {
             lastTime = currentTime;
 
             if (delta >= 1) {
+                new Thread(()-> update()).start();
                 update();
                 repaint(gc);
                 delta--;

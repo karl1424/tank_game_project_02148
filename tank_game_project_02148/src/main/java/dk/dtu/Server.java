@@ -7,7 +7,7 @@ import org.jspace.*;
 
 public class Server {
     public static void main(String[] args) throws UnknownHostException, IOException {
-        final String IP = "localhost";
+        final String IP = "10.134.17.47";
         final String port = "31145";
         int lobbyID = 0;
         SpaceRepository serverSpace = new SpaceRepository();
