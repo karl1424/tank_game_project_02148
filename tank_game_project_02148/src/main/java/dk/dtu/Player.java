@@ -80,24 +80,27 @@ public class Player {
     }
 
     private boolean checkCollision() {
-        boolean check = false;
-        int[][] grid = ge.grid.getGrid();
-        double x = hitbox.getX();
-        double y = hitbox.getY();
-        double width = hitbox.getWidth();
-        double height = hitbox.getHeight();
-
-        int y1 = (int) (x / ge.tileSize);
-        int y2 = (int) ((x + width) / ge.tileSize);
-        int x1 = (int) (y / ge.tileSize);
-        int x2 = (int) ((y + height) / ge.tileSize);
-
-        if (grid[x1][y1] == 1 || grid[x1][y2] == 1 || grid[x2][y1] == 1 || grid[x2][y2] == 1) {
-            check = true;
+        Rectangle[][] grid = ge.grid.getGrid();
+    
+        int buffer = 30;
+        int startX = Math.max(0, (int) ((hitbox.getX() - buffer) / ge.tileSize));
+        int endX = Math.min(grid[0].length, (int) ((hitbox.getX() + hitbox.getWidth() + buffer) / ge.tileSize));
+        int startY = Math.max(0, (int) ((hitbox.getY() - buffer) / ge.tileSize));
+        int endY = Math.min(grid.length, (int) ((hitbox.getY() + hitbox.getHeight() + buffer) / ge.tileSize));
+        int i = 0;
+        for (int row = startY; row < endY; row++) {
+            for (int col = startX; col < endX; col++) {
+                Rectangle rect = grid[row][col];
+                System.out.println(i++);
+                if (rect != null && hitbox.intersects(rect.getBoundsInLocal())) {
+                    return true;
+                }
+            }
         }
-
-        return check;
+        return false;
     }
+    
+    
 
     public void repaint(GraphicsContext gc) {
         gc.save();
