@@ -6,20 +6,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
-    private final int rows = 12;
-    private final int cols = 16;
-    private final int originalTileSize = 16;
-    private final int scale = 3;
-    private final int tileSize = originalTileSize * scale;
+    private final int rows = 36;
+    private final int cols = 48;
+    public final int tileSize = 16;
     private final int screenWidth = tileSize * cols;
     private final int screenHeight = tileSize * rows;
     private final int fps = 30;
 
     private Canvas canvas;
     private Thread gameThread;
-    private Player player;
     private GraphicsContext gc;
     private InputHandler inputHandler;
+    public Grid grid;
 
     private Client client;
 
@@ -35,9 +33,9 @@ public class GameEngine extends Pane implements Runnable {
         this.setOnKeyReleased(inputHandler);
 
         this.getChildren().add(canvas);
-        
-        client = new Client(inputHandler);
-        //player = new Player(inputHandler,"Player1", 100, 100);
+
+        client = new Client(this, inputHandler);
+        grid = new Grid(this);
         startGameThread();
     }
 
@@ -78,13 +76,18 @@ public class GameEngine extends Pane implements Runnable {
 
     private void update() {
         client.getPlayer().update();
-        client.sendCoordinate();
-        client.recieveCoordinates();
+        // client.sendCoordinate();
+        // client.recieveCoordinates();
     }
 
     private void repaint(GraphicsContext gc) {
         gc.setFill(Color.LIGHTGRAY);
         gc.fillRect(0, 0, screenWidth, screenHeight);
+        grid.drawGrid(gc);
         client.getPlayer().repaint(gc);
+
+        /*if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
+            this.getChildren().add(client.getPlayer().getHitbox());
+        }*/
     }
 }
