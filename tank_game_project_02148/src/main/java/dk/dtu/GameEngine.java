@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
     private final int rows = 36;
-    private final int cols = 48;
+    private final int cols = 46;
     public final int tileSize = 16;
     private final int screenWidth = tileSize * cols;
     private final int screenHeight = tileSize * rows;

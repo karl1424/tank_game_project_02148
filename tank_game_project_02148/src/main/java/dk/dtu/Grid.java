@@ -17,10 +17,10 @@ public class Grid {
 
     private void initGrid() {
         int rows = 36;
-        int cols = 48;
+        int cols = 46;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (i == 0 || i == rows - 1 || j == 0 || j == cols - 1 || i == 4) {
+                if (i == 0 || i == rows - 1 || j == 0 || j == cols - 1 || i % 5 == 0 || j % 5 == 0) {
                     grid[i][j] = 1;
                 } else {
                     grid[i][j] = 0;
