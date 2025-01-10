@@ -1,7 +1,5 @@
 package dk.dtu;
 
-import java.io.IOException;
-
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
@@ -13,7 +11,7 @@ import javafx.scene.paint.Color;
 
 public class Client {
     private Player player;
-    private String playername = "Player1";
+    private String playername = "player1";
     private InputHandler inputHandler;
     private Boolean offlineTest = false;
     private Space server;
@@ -31,13 +29,12 @@ public class Client {
     private double opponentPrevY;
     private double opponentPrevAngle;
 
-
     public Client(GameEngine ge, InputHandler inputHandler) {
         this.ge = ge;
         this.inputHandler = inputHandler;
 
         int port = 31145;
-        String host = "10.134.17.47";
+        String host = "localhost";
         int lobbyID = 0;
 
         opponentImage = new Image("file:res/tank1.png");
@@ -56,8 +53,8 @@ public class Client {
         // Connect to lobby
         if (!offlineTest) {
             try {
-                String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID+"player1" + "?conn";
-                String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID+"player2" + "?conn";
+                String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID + "player1" + "?conn";
+                String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
                 lobbySend = new RemoteSpace(uri1);
                 lobbyGet = new RemoteSpace(uri2);
             } catch (Exception e) {
@@ -94,7 +91,7 @@ public class Client {
 
     public void recieveCoordinates() {
         try {
-            coordinates = lobbyGet.queryp(new ActualField("Player2"),
+            coordinates = lobbyGet.queryp(new ActualField("player2"),
                     new FormalField(Double.class), new FormalField(Double.class), new FormalField(Double.class));
             if (coordinates != null) {
                 System.out.println(coordinates[0] + ": " + "x = " + coordinates[2].toString() + ", y = "

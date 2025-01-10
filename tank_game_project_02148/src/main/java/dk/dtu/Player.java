@@ -105,11 +105,9 @@ public class Player {
         int endX = Math.min(grid[0].length, (int) ((hitbox.getX() + hitbox.getWidth() + buffer) / ge.tileSize));
         int startY = Math.max(0, (int) ((hitbox.getY() - buffer) / ge.tileSize));
         int endY = Math.min(grid.length, (int) ((hitbox.getY() + hitbox.getHeight() + buffer) / ge.tileSize));
-        int i = 0;
         for (int row = startY; row < endY; row++) {
             for (int col = startX; col < endX; col++) {
                 Rectangle rect = grid[row][col];
-                System.out.println(i++);
                 if (rect != null && hitbox.intersects(rect.getBoundsInLocal())) {
                     return true;
                 }

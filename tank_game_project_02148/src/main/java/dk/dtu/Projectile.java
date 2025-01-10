@@ -28,7 +28,7 @@ public class Projectile {
         this.tileSize = tileSize;
     }
 
-    public void update(Rectangle tankHitbox, int[][] grid) {
+    public void update(Rectangle tankHitbox, Rectangle[][] grid) {
         double angleRadians = Math.toRadians(angle);
 
         if(!isActive) {
@@ -41,7 +41,7 @@ public class Projectile {
             int gridX = (int)(x/tileSize);
             int gridY = (int)(y/tileSize);
 
-            if(grid[gridY][gridX] == 1) {
+            if(grid[gridY][gridX] != null) {
                 wallHits++;
             } 
             if (wallHits >= MAX_WALL_HITS) {
@@ -58,17 +58,17 @@ public class Projectile {
     }
 
     
-    private void bounceOffWall(int[][] grid, int gridX, int gridY) {
+    private void bounceOffWall(Rectangle[][] grid, int gridX, int gridY) {
         boolean hitVerticalWall = false;
         boolean hitHorizontalWall = false;
     
         // Check for vertical wall collision
-        if (grid[gridY][gridX - 1] == 1 || grid[gridY][gridX + 1] == 1) {
+        if (grid[gridY][gridX - 1] != null || grid[gridY][gridX + 1] != null) {
             hitVerticalWall = true;
         }
     
         // Check for horizontal wall collision
-        if (grid[gridY - 1][gridX] == 1 || grid[gridY + 1][gridX] == 1) {
+        if (grid[gridY - 1][gridX] != null || grid[gridY + 1][gridX] != null) {
             hitHorizontalWall = true;
         }
     
