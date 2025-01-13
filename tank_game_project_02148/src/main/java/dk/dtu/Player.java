@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class Player {
     private InputHandler inputHandler;
@@ -139,7 +140,7 @@ public class Player {
                     continue;
                 }
                 Rectangle rect = grid[j][i];
-                if (rect != null && hitbox.intersects(rect.getBoundsInLocal())) {
+                if (rect != null && !Shape.intersect(hitbox, grid[j][i]).getBoundsInLocal().isEmpty()) {
                     return true;
                 }
             }
