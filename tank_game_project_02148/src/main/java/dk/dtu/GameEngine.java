@@ -6,7 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
-    public boolean isHost = false;
+    public boolean isHost = true;
     public boolean online = false;
 
     private final int rows = 36;
@@ -80,8 +80,8 @@ public class GameEngine extends Pane implements Runnable {
     private void update() {
         client.getPlayer().update();
 
+        client.sendCoordinate();
         if (online) {
-            client.sendCoordinate();
             client.recieveCoordinates();
         }
     }
@@ -92,9 +92,7 @@ public class GameEngine extends Pane implements Runnable {
         grid.drawGrid(gc);
         client.getPlayer().repaint(gc);
 
-        if (online) {
-            client.drawOpponent(gc);
-        }
+        client.drawOpponent(gc);
 
         /*
          * if (!this.getChildren().contains(client.getPlayer().getHitbox())) {

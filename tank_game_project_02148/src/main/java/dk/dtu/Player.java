@@ -23,7 +23,6 @@ public class Player {
     private int previousX;
     private int previousY;
 
-    private Projectile projectile;
     private boolean canShoot = true;
 
     public boolean shot = false;
@@ -69,7 +68,7 @@ public class Player {
             y -= (int) Math.round(Math.sin(angleRadians) * speed);
         }
 
-        if (inputHandler.shootPressed && projectile == null && canShoot) {
+        if (inputHandler.shootPressed && canShoot) {
             System.out.println("YES 1");
             shot = true;
             //canShoot = false;

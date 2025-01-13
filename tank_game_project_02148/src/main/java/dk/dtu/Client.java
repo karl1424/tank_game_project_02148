@@ -90,12 +90,15 @@ public class Client {
                 spawnProjectile(player.getX(), player.getY(), player.getAngle());
                 player.shot = false;
             }
-            try {
-                lobbySend.put(playername, player.getX(), player.getY(), player.getAngle(), player.getShot());
-
-            } catch (Exception e) {
-                System.out.println(e);
+            if(ge.online){
+                try {
+                    lobbySend.put(playername, player.getX(), player.getY(), player.getAngle(), player.getShot());
+    
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
             }
+            
         }
         prevX = player.getX();
         prevY = player.getY();
