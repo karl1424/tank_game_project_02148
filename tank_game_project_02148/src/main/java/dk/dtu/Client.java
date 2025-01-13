@@ -37,6 +37,7 @@ public class Client {
         int port = 31145;
         String host = "localhost";
         int lobbyID = 0;
+        
 
         opponentImage = new Image("file:res/tank1.png");
 
