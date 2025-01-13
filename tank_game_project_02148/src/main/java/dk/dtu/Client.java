@@ -11,10 +11,8 @@ import javafx.scene.paint.Color;
 
 public class Client {
     private Player player;
-    private String playername = "player1";
+    private String playername;
     private InputHandler inputHandler;
-    private boolean isHost = false;
-    private boolean offlineTest = true;
     private Space server;
     private Space lobbySend;
     private Space lobbyGet;
@@ -34,34 +32,37 @@ public class Client {
         this.ge = ge;
         this.inputHandler = inputHandler;
 
+        playername = ge.isHost ? "player1" : "player2";
+
         int port = 31145;
         String host = "localhost";
         int lobbyID = 0;
 
         opponentImage = new Image("file:res/tank1.png");
 
-        // Connect to server
-        if (isHost) {
-            try {
-                String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
-                server = new RemoteSpace(uri);
-                server.put("host", 1);
-            } catch (Exception e) {
-                System.out.println(e);
+        if (ge.online) {
+            // Connect to server
+            if (ge.isHost) {
+                try {
+                    String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
+                    server = new RemoteSpace(uri);
+                    server.put("host", 1);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
             }
-        }
-
-        // Connect to lobby
-        if (!offlineTest) {
+            // Connect to lobby
             try {
                 String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID + "player1" + "?conn";
                 String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
-                lobbySend = new RemoteSpace(uri1);
-                lobbyGet = new RemoteSpace(uri2);
+                lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
+                lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
             } catch (Exception e) {
                 System.out.println(e);
             }
+
         }
+
         createPlayer();
 
     }
@@ -92,7 +93,7 @@ public class Client {
 
     public void recieveCoordinates() {
         try {
-            coordinates = lobbyGet.queryp(new ActualField("player2"),
+            coordinates = lobbyGet.queryp(ge.isHost ? new ActualField("player2") : new ActualField("player1"),
                     new FormalField(Double.class), new FormalField(Double.class), new FormalField(Double.class));
             if (coordinates != null) {
                 System.out.println(coordinates[0] + ": " + "x = " + coordinates[2].toString() + ", y = "

@@ -4,25 +4,24 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
 public class Player {
     private InputHandler inputHandler;
     private GameEngine ge;
 
     private String playerName;
-    private double x = 100.0;
-    private double y = 100.0;
+    private int x = 100;
+    private int y = 100;
 
-    private double angle = 0.0;
-    private double angleSpeed = 6.0;
-    private double speed = 5.0;
+    private int angle = 0;
+    private int angleSpeed = 6;
+    private int speed = 5;
 
     private Image playerImage;
     private Rectangle hitbox;
 
-    private double previousX;
-    private double previousY;
+    private int previousX;
+    private int previousY;
 
     private Projectile projectile;
 
@@ -59,12 +58,12 @@ public class Player {
         double angleRadians = Math.toRadians(angle);
 
         if (inputHandler.upPressed) {
-            x += Math.cos(angleRadians) * speed;
-            y += Math.sin(angleRadians) * speed;
+            x += (int) Math.round(Math.cos(angleRadians) * speed);
+            y += (int) Math.round(Math.sin(angleRadians) * speed);
         }
         if (inputHandler.downPressed) {
-            x -= Math.cos(angleRadians) * speed;
-            y -= Math.sin(angleRadians) * speed;
+            x -= (int) Math.round(Math.cos(angleRadians) * speed);
+            y -= (int) Math.round(Math.sin(angleRadians) * speed);
         }
 
         if (inputHandler.shootPressed && projectile == null) {
@@ -83,13 +82,12 @@ public class Player {
             }
         }
 
-
-
         updateHitbox();
 
         if (checkCollision()) {
             x = previousX;
             y = previousY;
+            //angle = previousAngle;
             updateHitbox();
         }
     }
@@ -98,26 +96,50 @@ public class Player {
         hitbox.setX(x);
         hitbox.setY(y);
         hitbox.setRotate(angle);
+        // System.out.println(hitbox.getX() + ", " + hitbox.getY());
     }
 
     private boolean checkCollision() {
         Rectangle[][] grid = ge.grid.getGrid();
 
-        int buffer = 30;
-        int startX = Math.max(0, (int) ((hitbox.getX() - buffer) / ge.tileSize));
-        int endX = Math.min(grid[0].length, (int) ((hitbox.getX() + hitbox.getWidth()
-                + buffer) / ge.tileSize));
-        int startY = Math.max(0, (int) ((hitbox.getY() - buffer) / ge.tileSize));
-        int endY = Math.min(grid.length, (int) ((hitbox.getY() + hitbox.getHeight() +
-                buffer) / ge.tileSize));
-        for (int row = startY; row < endY; row++) {
-            for (int col = startX; col < endX; col++) {
-                Rectangle rect = grid[row][col];
+        int startX = (int) (hitbox.getX() / ge.tileSize - 2);
+        int startY = (int) (hitbox.getY() / ge.tileSize - 2);
+        int endX = (int) ((hitbox.getX() + 2 * ge.tileSize) / ge.tileSize + 2);
+        int endY = (int) ((hitbox.getY() + 2 * ge.tileSize) / ge.tileSize + 2);
+
+        // System.out.println(startX + ", " + startY + ", " + endX + ", " + endY);
+
+        /*
+         * for (int i = startX; i <= endX; i++) {
+         * for (int j = startY; j <= endY; j++) {
+         * if (i < 0 || i >= 46 || j < 0 || j >= 36) {
+         * continue;
+         * }
+         * if (grid[j][i] != null) {
+         * //System.out.println(i + ", " + j);
+         * Shape tileShape = (Shape) grid[j][i];
+         * Shape intersection = Shape.intersect(hitboxShape, tileShape);
+         * 
+         * if (intersection.getBoundsInLocal().getWidth() != -1) {
+         * return true;
+         * }
+         * }
+         * }
+         * }
+         */
+
+        for (int i = startX; i <= endX; i++) {
+            for (int j = startY; j <= endY; j++) {
+                if (i < 0 || i >= 46 || j < 0 || j >= 36) {
+                    continue;
+                }
+                Rectangle rect = grid[j][i];
                 if (rect != null && hitbox.intersects(rect.getBoundsInLocal())) {
                     return true;
                 }
             }
         }
+
         return false;
 
     }

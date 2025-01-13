@@ -68,6 +68,7 @@ public class Grid {
                 }
             }
         }
+        //System.out.println(grid[20][10] != null);
     }
 
     public void drawGrid(GraphicsContext gc) {

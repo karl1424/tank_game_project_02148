@@ -6,6 +6,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
+    public boolean isHost = false;
+    public boolean online = true;
+
     private final int rows = 36;
     private final int cols = 46;
     public final int tileSize = 16;
@@ -60,14 +63,14 @@ public class GameEngine extends Pane implements Runnable {
             lastTime = currentTime;
 
             if (delta >= 1) {
-                new Thread(()-> update()).start();
+                new Thread(() -> update()).start();
                 repaint(gc);
                 delta--;
                 drawCount++;
             }
 
             if (timer >= 1000000000) {
-                //System.out.println("FPS: " + drawCount);
+                // System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -76,8 +79,11 @@ public class GameEngine extends Pane implements Runnable {
 
     private void update() {
         client.getPlayer().update();
-        //client.sendCoordinate();
-        //client.recieveCoordinates();
+
+        if (online) {
+            client.sendCoordinate();
+            client.recieveCoordinates();
+        }
     }
 
     private void repaint(GraphicsContext gc) {
@@ -85,12 +91,15 @@ public class GameEngine extends Pane implements Runnable {
         gc.fillRect(0, 0, screenWidth, screenHeight);
         grid.drawGrid(gc);
         client.getPlayer().repaint(gc);
-        //client.drawOpponent(gc);
 
-        
-        
-        /*if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
-            this.getChildren().add(client.getPlayer().getHitbox());
-        }*/
+        if (online) {
+            client.drawOpponent(gc);
+        }
+
+        /*
+         * if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
+         * this.getChildren().add(client.getPlayer().getHitbox());
+         * }
+         */
     }
 }
