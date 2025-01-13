@@ -64,7 +64,13 @@ public class GameEngine extends Pane implements Runnable {
             lastTime = currentTime;
 
             if (delta >= 1) {
-                new Thread(() -> update()).start();
+                new Thread(() -> {
+                    try {
+                        update();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
                 repaint(gc);
                 delta--;
                 drawCount++;
@@ -76,9 +82,12 @@ public class GameEngine extends Pane implements Runnable {
                 timer = 0;
             }
         }
+        new Thread(() -> {
+                client.recieveShots();;
+        }).start();
     }
 
-    private void update() {
+    private void update() throws InterruptedException {
         client.getPlayer().update();
 
         client.sendCoordinate();

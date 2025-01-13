@@ -18,6 +18,7 @@ public class Client {
     private Space server;
     private Space lobbySend;
     private Space lobbyGet;
+    private Space lobbyShots;
     private GameEngine ge;
 
     private int prevX;
@@ -60,8 +61,10 @@ public class Client {
             try {
                 String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID + "player1" + "?conn";
                 String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
+                String uriS = "tcp://" + host + ":" + port + "/" + lobbyID + "shots" + "?conn";
                 lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
                 lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
+                lobbyShots =  new RemoteSpace(uriS);
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -83,16 +86,18 @@ public class Client {
         return player;
     }
 
-    public void sendCoordinate() {
-        if (prevX != player.getX() || prevY != player.getY() || prevAngle != player.getAngle() || player.getShot()) {
-            if (player.getShot()) {
-                System.out.println("YES 2");
-                spawnProjectile(player.getX(), player.getY(), player.getAngle());
-                player.shot = false;
-            }
+    public void sendCoordinate() throws InterruptedException {
+        if (player.getShot()) {
+            System.out.println("you shot");
+            spawnProjectile(player.getX(), player.getY(), player.getAngle());
+            lobbyShots.put(playername);
+            player.shot = false;
+        }
+
+        if (prevX != player.getX() || prevY != player.getY() || prevAngle != player.getAngle()) {
             if(ge.online){
                 try {
-                    lobbySend.put(playername, player.getX(), player.getY(), player.getAngle(), player.getShot());
+                    lobbySend.put(playername, player.getX(), player.getY(), player.getAngle());
     
                 } catch (Exception e) {
                     System.out.println(e);
@@ -104,12 +109,10 @@ public class Client {
         prevY = player.getY();
         prevAngle = player.getAngle();
     }
-
     public void recieveCoordinates() {
         try {
             coordinates = lobbyGet.queryp(ge.isHost ? new ActualField("player2") : new ActualField("player1"),
-                    new FormalField(Integer.class), new FormalField(Integer.class), new FormalField(Integer.class),
-                    new FormalField(Boolean.class));
+                    new FormalField(Integer.class), new FormalField(Integer.class), new FormalField(Integer.class));
             if (coordinates != null) {
                 /*
                  * System.out.println(coordinates[0] + ": " + "x = " + coordinates[2].toString()
@@ -117,11 +120,6 @@ public class Client {
                  * + coordinates[2].toString() + ", angle = "
                  * + coordinates[3].toString());
                  */
-                if ((boolean) coordinates[4]) {
-                    System.out.println("Enemy Shot!");
-                    spawnProjectile((int) coordinates[1], (int) coordinates[2], (int) coordinates[3]);
-                }
-                System.out.println((boolean) coordinates[4]);
                 opponentPrevX = (int) coordinates[1];
                 opponentPrevY = (int) coordinates[2];
                 opponentPrevAngle = (int) coordinates[3];
@@ -129,6 +127,17 @@ public class Client {
 
         } catch (Exception e) {
             System.out.println(e);
+        }
+    }
+
+    public void recieveShots() {
+        while (true) {
+            try {
+                lobbyShots.get(ge.isHost ? new ActualField("player2") : new ActualField("player1"));
+                spawnProjectile((int) coordinates[1], (int) coordinates[2], (int) coordinates[3]);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
