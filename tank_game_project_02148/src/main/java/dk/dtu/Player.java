@@ -9,11 +9,11 @@ public class Player {
     private InputHandler inputHandler;
     private GameEngine ge;
 
-    private String playerName;
-    private int x = 100;
-    private int y = 100;
+    private int x;
+    private int y;
 
-    private int angle = 0;
+    private String playerName;
+    private int angle;
     private int angleSpeed = 6;
     private int speed = 5;
 
@@ -33,6 +33,15 @@ public class Player {
         this.ge = ge;
         this.playerName = playerName;
         this.inputHandler = inputHandler;
+        if(playerName == "player1"){
+            x = 100;
+            y = 100;
+            angle = 0;
+        } else {
+            x = 200;
+            y = 200;
+            angle = 180;
+        }
         this.previousX = x;
         this.previousY = y;
         this.COOLDOWN = ge.projectileLifespan;
@@ -41,7 +50,6 @@ public class Player {
 
     private void init() {
         playerImage = new Image("file:res/tank1.png");
-
         hitbox = new Rectangle(x, y, ge.tileSize * 2, ge.tileSize * 2);
         hitbox.setFill(Color.TRANSPARENT);
         hitbox.setStroke(Color.RED);
