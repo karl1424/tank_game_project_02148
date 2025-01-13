@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class Player {
     private InputHandler inputHandler;
@@ -66,21 +67,23 @@ public class Player {
             y -= Math.sin(angleRadians) * speed;
         }
 
-        if(inputHandler.shootPressed && projectile == null) {
-            double offset = ge.tileSize;
-            
-            double projectileX = x + Math.cos(angleRadians)*offset + ge.tileSize;
-            double projectileY = y + Math.sin(angleRadians)*offset + ge.tileSize;
+        if (inputHandler.shootPressed && projectile == null) {
+            double offset = 1.6 * ge.tileSize;
 
-            projectile = new Projectile(projectileX, projectileY, angle,ge.tileSize);
+            double projectileX = x + Math.cos(angleRadians) * offset + ge.tileSize;
+            double projectileY = y + Math.sin(angleRadians) * offset + ge.tileSize;
+
+            projectile = new Projectile(projectileX, projectileY, angle, ge.tileSize);
         }
-        
-        if(projectile != null) {
-            projectile.update(hitbox,ge.grid.getGrid());
-            if(!projectile.isActive()) {
+
+        if (projectile != null) {
+            projectile.update(hitbox, ge.grid.getGrid());
+            if (!projectile.isActive()) {
                 projectile = null;
             }
         }
+
+
 
         updateHitbox();
 
@@ -99,12 +102,14 @@ public class Player {
 
     private boolean checkCollision() {
         Rectangle[][] grid = ge.grid.getGrid();
-    
+
         int buffer = 30;
         int startX = Math.max(0, (int) ((hitbox.getX() - buffer) / ge.tileSize));
-        int endX = Math.min(grid[0].length, (int) ((hitbox.getX() + hitbox.getWidth() + buffer) / ge.tileSize));
+        int endX = Math.min(grid[0].length, (int) ((hitbox.getX() + hitbox.getWidth()
+                + buffer) / ge.tileSize));
         int startY = Math.max(0, (int) ((hitbox.getY() - buffer) / ge.tileSize));
-        int endY = Math.min(grid.length, (int) ((hitbox.getY() + hitbox.getHeight() + buffer) / ge.tileSize));
+        int endY = Math.min(grid.length, (int) ((hitbox.getY() + hitbox.getHeight() +
+                buffer) / ge.tileSize));
         for (int row = startY; row < endY; row++) {
             for (int col = startX; col < endX; col++) {
                 Rectangle rect = grid[row][col];
@@ -114,9 +119,8 @@ public class Player {
             }
         }
         return false;
+
     }
-    
-    
 
     public void repaint(GraphicsContext gc) {
         gc.save();
@@ -125,10 +129,10 @@ public class Player {
 
         gc.setFill(Color.BLUE);
         gc.drawImage(playerImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
-        
+
         gc.restore();
 
-        if(projectile != null) {
+        if (projectile != null) {
             projectile.repaint(gc);
         }
     }
@@ -145,7 +149,7 @@ public class Player {
         return y;
     }
 
-    public double getAngle(){
+    public double getAngle() {
         return angle;
     }
 }

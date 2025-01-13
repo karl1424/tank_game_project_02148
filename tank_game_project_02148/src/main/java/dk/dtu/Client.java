@@ -13,7 +13,8 @@ public class Client {
     private Player player;
     private String playername = "player1";
     private InputHandler inputHandler;
-    private Boolean offlineTest = false;
+    private boolean isHost = false;
+    private boolean offlineTest = true;
     private Space server;
     private Space lobbySend;
     private Space lobbyGet;
@@ -40,7 +41,7 @@ public class Client {
         opponentImage = new Image("file:res/tank1.png");
 
         // Connect to server
-        if (true) {
+        if (isHost) {
             try {
                 String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
                 server = new RemoteSpace(uri);
