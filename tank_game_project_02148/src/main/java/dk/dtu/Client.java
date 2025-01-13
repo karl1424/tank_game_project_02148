@@ -47,7 +47,7 @@ public class Client {
         int lobbyID = 0;
         
 
-        opponentImage = new Image("file:res/tank1.png");
+        opponentImage = new Image("file:res/tank2.png");
 
         if (ge.online) {
             // Connect to server
@@ -91,7 +91,6 @@ public class Client {
 
     public void sendCoordinate() throws InterruptedException {
         if (player.getShot()) {
-            System.out.println("you shot");
             spawnProjectile(player.getX(), player.getY(), player.getAngle());
             if(ge.online){
                 lobbyShots.put(playername);
@@ -136,11 +135,9 @@ public class Client {
     }
 
     public void recieveShots() {
-        System.out.println("recive shots started");
         while (true) {
             try {
                 lobbyShots.get(ge.isHost ? new ActualField("player2") : new ActualField("player1"));
-                System.out.println("opponent shot");
                 spawnProjectile((int) coordinates[1], (int) coordinates[2], (int) coordinates[3]);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -149,7 +146,6 @@ public class Client {
     }
 
     public void spawnProjectile(int x, int y, int angle) {
-        System.out.println("Projectile spawned");
         double angleRadians = Math.toRadians(angle);
         double offset = 1.6 * ge.tileSize;
         int projectileX = (int) Math.round(x + Math.cos(angleRadians) * offset + ge.tileSize);
