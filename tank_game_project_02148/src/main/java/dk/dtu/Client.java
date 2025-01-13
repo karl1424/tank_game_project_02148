@@ -136,9 +136,11 @@ public class Client {
     }
 
     public void recieveShots() {
+        System.out.println("recive shots started");
         while (true) {
             try {
                 lobbyShots.get(ge.isHost ? new ActualField("player2") : new ActualField("player1"));
+                System.out.println("opponent shot");
                 spawnProjectile((int) coordinates[1], (int) coordinates[2], (int) coordinates[3]);
             } catch (InterruptedException e) {
                 e.printStackTrace();

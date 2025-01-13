@@ -91,7 +91,6 @@ public class GameEngine extends Pane implements Runnable {
                 timer = 0;
             }
         }
-
     }
 
     private void update() throws InterruptedException {
