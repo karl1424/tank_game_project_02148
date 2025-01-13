@@ -20,15 +20,15 @@ public class Client {
     private Space lobbyGet;
     private GameEngine ge;
 
-    private double prevX;
-    private double prevY;
-    private double prevAngle;
+    private int prevX;
+    private int prevY;
+    private int prevAngle;
 
     Object[] coordinates;
     private Image opponentImage;
-    private double opponentPrevX;
-    private double opponentPrevY;
-    private double opponentPrevAngle;
+    private int opponentPrevX;
+    private int opponentPrevY;
+    private int opponentPrevAngle;
 
     ArrayList<Projectile> projectileList = new ArrayList<>();
 
@@ -158,8 +158,8 @@ public class Client {
 
         if (coordinates != null) {
             gc.save();
-            gc.translate((double) coordinates[1] + ge.tileSize, (double) coordinates[2] + ge.tileSize);
-            gc.rotate((double) coordinates[3]);
+            gc.translate((double) (int) coordinates[1] + ge.tileSize, (double) (int) coordinates[2] + ge.tileSize);
+            gc.rotate((double) (int) coordinates[3]);
 
             gc.setFill(Color.BLUE);
             gc.drawImage(opponentImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
@@ -167,8 +167,8 @@ public class Client {
             gc.restore();
         } else {
             gc.save();
-            gc.translate(opponentPrevX + ge.tileSize, (double) opponentPrevY + ge.tileSize);
-            gc.rotate(opponentPrevAngle);
+            gc.translate((double) opponentPrevX + ge.tileSize, (double) (int) opponentPrevY + ge.tileSize);
+            gc.rotate((double) opponentPrevAngle);
 
             gc.setFill(Color.BLUE);
             gc.drawImage(opponentImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
