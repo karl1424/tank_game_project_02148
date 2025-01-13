@@ -48,7 +48,7 @@ class lobbyHandeler implements Runnable {
 
     public void run() {
         serverSpace.add(lobbyID+"player1", new StackSpace());
-        serverSpace.add(lobbyID+"player2", new StackSpace());
+        serverSpace.add(lobbyID+"player2", new StackSpace()); 
         serverSpace.add(lobbyID+"shots", new SequentialSpace());
     } 
 }
