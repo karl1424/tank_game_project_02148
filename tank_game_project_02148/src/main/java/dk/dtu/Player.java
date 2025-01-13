@@ -25,6 +25,9 @@ public class Player {
     private double previousY;
 
     private Projectile projectile;
+    private boolean canShoot = true;
+
+    public boolean shot = false;
 
     public Player(GameEngine ge, InputHandler inputHandler, String playerName) {
         this.ge = ge;
@@ -67,21 +70,14 @@ public class Player {
             y -= Math.sin(angleRadians) * speed;
         }
 
-        if (inputHandler.shootPressed && projectile == null) {
-            double offset = 1.6 * ge.tileSize;
-
-            double projectileX = x + Math.cos(angleRadians) * offset + ge.tileSize;
-            double projectileY = y + Math.sin(angleRadians) * offset + ge.tileSize;
-
-            projectile = new Projectile(projectileX, projectileY, angle, ge.tileSize);
+        if (inputHandler.shootPressed && projectile == null && canShoot) {
+            System.out.println("YES 1");
+            shot = true;
+            //canShoot = false;
+            //Start a timer to reset canShoot;
         }
 
-        if (projectile != null) {
-            projectile.update(hitbox, ge.grid.getGrid());
-            if (!projectile.isActive()) {
-                projectile = null;
-            }
-        }
+        
 
 
 
@@ -131,10 +127,6 @@ public class Player {
         gc.drawImage(playerImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
 
         gc.restore();
-
-        if (projectile != null) {
-            projectile.repaint(gc);
-        }
     }
 
     public Rectangle getHitbox() {
@@ -151,5 +143,10 @@ public class Player {
 
     public double getAngle() {
         return angle;
+    }
+
+    public boolean getShot(){
+        return shot;
+        
     }
 }
