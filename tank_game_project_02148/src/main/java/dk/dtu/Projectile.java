@@ -8,24 +8,21 @@ import javafx.scene.shape.Shape;
 
 public class Projectile {
 
-    private double x;
-    private double y;
-    private double angle;
+    private int x, y, angle;
 
-    private double speed = 5.0;
+    private int speed = 5;
 
     private long creationTime;
     private static final long LIFETIME = 3000;
 
     private boolean isActive = true;
+    private GameEngine ge;
 
-    private int tileSize;
-
-    public Projectile(double x, double y, double angle, int tileSize) {
+    public Projectile(GameEngine ge, int x, int y, int angle) {
+        this.ge = ge;
         this.x = x;
         this.y = y;
         this.angle = angle;
-        this.tileSize = tileSize;
         this.creationTime = System.currentTimeMillis();
     }
 
@@ -44,8 +41,8 @@ public class Projectile {
         x += Math.cos(angleRadians) * speed;
         y += Math.sin(angleRadians) * speed;
 
-        int gridX = Math.floorDiv((int) x, tileSize);
-        int gridY = Math.floorDiv((int) y, tileSize);
+        int gridX = Math.floorDiv((int) x, ge.tileSize);
+        int gridY = Math.floorDiv((int) y, ge.tileSize);
 
         bounceOffWall(grid, gridX, gridY);
 

@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
     public boolean isHost = false;
-    public boolean online = true;
+    public boolean online = false;
 
     private final int rows = 36;
     private final int cols = 46;
@@ -91,7 +91,6 @@ public class GameEngine extends Pane implements Runnable {
         gc.fillRect(0, 0, screenWidth, screenHeight);
         grid.drawGrid(gc);
         client.getPlayer().repaint(gc);
-        client.drawOpponent(gc);
 
         if (online) {
             client.drawOpponent(gc);

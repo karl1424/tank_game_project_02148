@@ -105,7 +105,7 @@ public class Client {
     public void recieveCoordinates() {
         try {
             coordinates = lobbyGet.queryp(ge.isHost ? new ActualField("player2") : new ActualField("player1"),
-                    new FormalField(Double.class), new FormalField(Double.class), new FormalField(Double.class),
+                    new FormalField(Integer.class), new FormalField(Integer.class), new FormalField(Integer.class),
                     new FormalField(Boolean.class));
             if (coordinates != null) {
                 /*
@@ -114,14 +114,14 @@ public class Client {
                  * + coordinates[2].toString() + ", angle = "
                  * + coordinates[3].toString());
                  */
-                if ((Boolean) coordinates[4]) {
+                if ((boolean) coordinates[4]) {
                     System.out.println("Enemy Shot!");
-                    spawnProjectile((double) coordinates[1], (double) coordinates[2], (double) coordinates[3]);
+                    spawnProjectile((int) coordinates[1], (int) coordinates[2], (int) coordinates[3]);
                 }
-                System.out.println((Boolean) coordinates[4]);
-                opponentPrevX = (double) coordinates[1];
-                opponentPrevY = (double) coordinates[2];
-                opponentPrevAngle = (double) coordinates[3];
+                System.out.println((boolean) coordinates[4]);
+                opponentPrevX = (int) coordinates[1];
+                opponentPrevY = (int) coordinates[2];
+                opponentPrevAngle = (int) coordinates[3];
             }
 
         } catch (Exception e) {
@@ -129,14 +129,14 @@ public class Client {
         }
     }
 
-    public void spawnProjectile(double x, double y, double angle) {
+    public void spawnProjectile(int x, int y, int angle) {
         System.out.println("Projectile spawned");
         double angleRadians = Math.toRadians(angle);
         double offset = 1.6 * ge.tileSize;
-        double projectileX = x + Math.cos(angleRadians) * offset + ge.tileSize;
-        double projectileY = y + Math.sin(angleRadians) * offset + ge.tileSize;
+        int projectileX = (int) Math.round(x + Math.cos(angleRadians) * offset + ge.tileSize);
+        int projectileY = (int) Math.round(y + Math.sin(angleRadians) * offset + ge.tileSize);
 
-        projectileList.add(new Projectile(projectileX, projectileY, angle, ge.tileSize));
+        projectileList.add(new Projectile(ge, projectileX, projectileY, angle));
     }
 
     public void drawOpponent(GraphicsContext gc) {

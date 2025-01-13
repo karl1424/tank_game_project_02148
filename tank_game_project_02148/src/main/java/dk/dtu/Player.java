@@ -155,20 +155,19 @@ public class Player {
         return hitbox;
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public double getY() {
+    public int getY() {
         return y;
     }
 
-    public double getAngle() {
+    public int getAngle() {
         return angle;
     }
 
     public boolean getShot(){
         return shot;
-        
     }
 }
