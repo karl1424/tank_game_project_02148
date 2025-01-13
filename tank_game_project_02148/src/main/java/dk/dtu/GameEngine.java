@@ -57,6 +57,10 @@ public class GameEngine extends Pane implements Runnable {
         long timer = 0;
         int drawCount = 0;
 
+        new Thread(() -> {
+            client.recieveShots();;
+        }).start();
+
         while (gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
@@ -82,9 +86,7 @@ public class GameEngine extends Pane implements Runnable {
                 timer = 0;
             }
         }
-        new Thread(() -> {
-                client.recieveShots();;
-        }).start();
+        
     }
 
     private void update() throws InterruptedException {

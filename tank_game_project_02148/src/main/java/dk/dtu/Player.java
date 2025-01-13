@@ -69,7 +69,6 @@ public class Player {
         }
 
         if (inputHandler.shootPressed && canShoot) {
-            System.out.println("YES 1");
             shot = true;
             //canShoot = false;
             //Start a timer to reset canShoot;
