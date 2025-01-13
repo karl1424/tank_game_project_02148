@@ -1,5 +1,7 @@
 package dk.dtu;
 
+import java.util.ArrayList;
+
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
@@ -27,6 +29,8 @@ public class Client {
     private double opponentPrevX;
     private double opponentPrevY;
     private double opponentPrevAngle;
+
+    ArrayList<Projectile> projectileList = new ArrayList<>();
 
     public Client(GameEngine ge, InputHandler inputHandler) {
         this.ge = ge;
@@ -80,9 +84,15 @@ public class Client {
     }
 
     public void sendCoordinate() {
-        if (prevX != player.getX() || prevY != player.getY() || prevAngle != player.getAngle()) {
+        if (prevX != player.getX() || prevY != player.getY() || prevAngle != player.getAngle() || player.getShot()) {
+            if (player.getShot()) {
+                System.out.println("YES 2");
+                spawnProjectile(player.getX(), player.getY(), player.getAngle());
+                player.shot = false;
+            }
             try {
-                lobbySend.put(playername, player.getX(), player.getY(), player.getAngle());
+                lobbySend.put(playername, player.getX(), player.getY(), player.getAngle(), player.getShot());
+
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -95,11 +105,20 @@ public class Client {
     public void recieveCoordinates() {
         try {
             coordinates = lobbyGet.queryp(ge.isHost ? new ActualField("player2") : new ActualField("player1"),
-                    new FormalField(Double.class), new FormalField(Double.class), new FormalField(Double.class));
+                    new FormalField(Double.class), new FormalField(Double.class), new FormalField(Double.class),
+                    new FormalField(Boolean.class));
             if (coordinates != null) {
-                System.out.println(coordinates[0] + ": " + "x = " + coordinates[2].toString() + ", y = "
-                        + coordinates[2].toString() + ", angle = "
-                        + coordinates[3].toString());
+                /*
+                 * System.out.println(coordinates[0] + ": " + "x = " + coordinates[2].toString()
+                 * + ", y = "
+                 * + coordinates[2].toString() + ", angle = "
+                 * + coordinates[3].toString());
+                 */
+                if ((Boolean) coordinates[4]) {
+                    System.out.println("Enemy Shot!");
+                    spawnProjectile((double) coordinates[1], (double) coordinates[2], (double) coordinates[3]);
+                }
+                System.out.println((Boolean) coordinates[4]);
                 opponentPrevX = (double) coordinates[1];
                 opponentPrevY = (double) coordinates[2];
                 opponentPrevAngle = (double) coordinates[3];
@@ -110,7 +129,30 @@ public class Client {
         }
     }
 
+    public void spawnProjectile(double x, double y, double angle) {
+        System.out.println("Projectile spawned");
+        double angleRadians = Math.toRadians(angle);
+        double offset = 1.6 * ge.tileSize;
+        double projectileX = x + Math.cos(angleRadians) * offset + ge.tileSize;
+        double projectileY = y + Math.sin(angleRadians) * offset + ge.tileSize;
+
+        projectileList.add(new Projectile(projectileX, projectileY, angle, ge.tileSize));
+    }
+
     public void drawOpponent(GraphicsContext gc) {
+        if(projectileList != null){
+            if (projectileList.size() != 0) {
+                for (int i = 0; i < projectileList.size(); i++) {
+                    projectileList.get(i).repaint(gc);
+                    projectileList.get(i).update(player.getHitbox(), ge.grid.getGrid());
+                    if (!projectileList.get(i).isActive()) {
+                        projectileList.remove(i);
+                    }
+                }
+            }
+        }
+        
+
         if (coordinates != null) {
             gc.save();
             gc.translate((double) coordinates[1] + ge.tileSize, (double) coordinates[2] + ge.tileSize);

@@ -91,6 +91,7 @@ public class GameEngine extends Pane implements Runnable {
         gc.fillRect(0, 0, screenWidth, screenHeight);
         grid.drawGrid(gc);
         client.getPlayer().repaint(gc);
+        client.drawOpponent(gc);
 
         if (online) {
             client.drawOpponent(gc);
