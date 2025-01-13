@@ -39,7 +39,7 @@ public class Client {
         playername = ge.isHost ? "player1" : "player2";
 
         int port = 31145;
-        String host = "localhost";
+        String host = ge.IP;
         int lobbyID = 0;
         
 
