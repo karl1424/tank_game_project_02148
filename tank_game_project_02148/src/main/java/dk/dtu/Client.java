@@ -38,9 +38,11 @@ public class Client {
         this.ge = ge;
         this.inputHandler = inputHandler;
 
+        Object [] lobby;
         int port = 31145;
         String host = "localhost";
         int lobbyID = 0;
+        
 
         opponentImage = new Image("file:res/tank1.png");
 
@@ -50,6 +52,8 @@ public class Client {
                 String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
                 server = new RemoteSpace(uri);
                 server.put("host", 1);
+                lobby = server.get(new ActualField("lobby"),new FormalField(Integer.class));
+                lobbyID = (int) lobby[1];
             } catch (Exception e) {
                 System.out.println(e);
             }
