@@ -14,11 +14,10 @@ public class Projectile {
 
     private double speed = 5.0;
 
+    private long creationTime;
+    private static final long LIFETIME = 3000;
+
     private boolean isActive = true;
-
-    private int wallHits = 0;
-
-    private static final int MAX_WALL_HITS = 7;
 
     private int tileSize;
 
@@ -27,6 +26,7 @@ public class Projectile {
         this.y = y;
         this.angle = angle;
         this.tileSize = tileSize;
+        this.creationTime = System.currentTimeMillis();
     }
 
     public void update(Rectangle tankHitbox, Rectangle[][] grid) {
@@ -36,25 +36,21 @@ public class Projectile {
             return;
         }
 
+        if (System.currentTimeMillis() - creationTime >= LIFETIME) {
+            isActive = false;
+            return;
+        }
+
         x += Math.cos(angleRadians) * speed;
         y += Math.sin(angleRadians) * speed;
 
-        int gridX = (int) (x / tileSize);
-        int gridY = (int) (y / tileSize);
+        int gridX = Math.floorDiv((int) x, tileSize);
+        int gridY = Math.floorDiv((int) y, tileSize);
 
-        if (wallHits >= MAX_WALL_HITS) {
-            isActive = false;
-        } else {
-            bounceOffWall(grid, gridX, gridY);
-        }
+        bounceOffWall(grid, gridX, gridY);
 
-        Circle projectileHitbox = new Circle(x - 5, y - 5, 5);
-
-        Shape tankHitboxShape = (Shape) tankHitbox;
-        Shape projectileHitboxShape = (Shape) projectileHitbox;
-        Shape intersection = Shape.intersect(tankHitboxShape, projectileHitboxShape);
-
-        if (intersection.getBoundsInLocal().getWidth() > 0) {
+        Circle projectileHitbox = new Circle(x, y, 5);
+        if (projectileHitbox.intersects(tankHitbox.getBoundsInLocal())) {
             isActive = false;
         }
 
@@ -64,28 +60,34 @@ public class Projectile {
         boolean hitVerticalWall = false;
         boolean hitHorizontalWall = false;
 
-        // Check for vertical wall collision
-        if (grid[gridY][gridX - 1] != null || grid[gridY][gridX + 1] != null) {
-            hitVerticalWall = true;
+        if (gridY >= 0 && gridY < grid.length && gridX - 1 >= 0 && gridX + 1 < grid[gridY].length) {
+            if (grid[gridY][gridX - 1] != null || grid[gridY][gridX + 1] != null) {
+                hitVerticalWall = true;
+            }
         }
 
-        // Check for horizontal wall collision
-        if (grid[gridY - 1][gridX] != null || grid[gridY + 1][gridX] != null) {
-            hitHorizontalWall = true;
+        if (gridY >= 0 && gridY < grid.length && gridX >= 0 && gridX < grid[gridY].length) {
+            if (grid[gridY - 1][gridX] != null || grid[gridY + 1][gridX] != null) {
+                hitHorizontalWall = true;
+            }
         }
 
-        // Reverse angle based on wall type
+        if (gridX < 0 || gridX >= grid[0].length || gridY < 0 || gridY >= grid.length) {
+            isActive = false;
+            return;
+        }
+
+        // Handle corner collisions (both vertical and horizontal)
         if (hitVerticalWall && hitHorizontalWall) {
             angle = (angle + 180) % 360; // Reverse completely
         } else if (hitVerticalWall) {
-            angle = 180 - angle; // Bounce off vertical wall
+            angle = (angle > 90 && angle < 270) ? 180 - angle : 180 - angle;
         } else if (hitHorizontalWall) {
-            angle = -angle; // Bounce off horizontal wall
+            angle = -angle;
         }
 
-        if (hitVerticalWall || hitHorizontalWall) {
-            wallHits++;
-        }
+        angle = (angle + 360) % 360;
+
     }
 
     public void repaint(GraphicsContext gc) {
@@ -94,6 +96,9 @@ public class Projectile {
         } else {
             gc.setFill(Color.BLACK);
             gc.fillOval(x - 5, y - 5, 10, 10);
+            //gc.setStroke(Color.RED);
+            //gc.strokeLine(x, y, x + Math.cos(Math.toRadians(angle)) * 20, y + Math.sin(Math.toRadians(angle)) * 20);
+
         }
     }
 
