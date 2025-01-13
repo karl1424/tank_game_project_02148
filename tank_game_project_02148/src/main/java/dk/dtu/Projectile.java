@@ -13,7 +13,7 @@ public class Projectile {
     private int speed = 5;
 
     private long creationTime;
-    private static final long LIFETIME = 3000;
+    private long LIFETIME = 3000;
 
     private boolean isActive = true;
     private GameEngine ge;
@@ -23,7 +23,9 @@ public class Projectile {
         this.x = x;
         this.y = y;
         this.angle = angle;
+        this.LIFETIME = ge.projectileLifespan;
         this.creationTime = System.currentTimeMillis();
+
     }
 
     public void update(Rectangle tankHitbox, Rectangle[][] grid) {

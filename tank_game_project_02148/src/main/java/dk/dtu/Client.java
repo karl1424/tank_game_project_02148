@@ -38,6 +38,9 @@ public class Client {
         this.inputHandler = inputHandler;
 
         playername = ge.isHost ? "player1" : "player2";
+        if(!ge.online){
+            ge.isHost = true;
+        }
 
         int port = 31145;
         String host = ge.IP;
@@ -90,7 +93,9 @@ public class Client {
         if (player.getShot()) {
             System.out.println("you shot");
             spawnProjectile(player.getX(), player.getY(), player.getAngle());
-            lobbyShots.put(playername);
+            if(ge.online){
+                lobbyShots.put(playername);
+            }
             player.shot = false;
         }
 

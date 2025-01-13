@@ -7,9 +7,9 @@ import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
     public boolean isHost = true;
-    public boolean online = true;
+    public boolean online = false;
     public String IP = "10.134.17.47";
-    
+
     private final int rows = 36;
     private final int cols = 46;
     public final int tileSize = 16;
@@ -24,6 +24,8 @@ public class GameEngine extends Pane implements Runnable {
     public Grid grid;
 
     private Client client;
+
+    public long projectileLifespan = 3000;
 
     public GameEngine() {
         this.setPrefSize(screenWidth, screenHeight);
@@ -57,6 +59,13 @@ public class GameEngine extends Pane implements Runnable {
         long timer = 0;
         int drawCount = 0;
 
+        if(online){
+            new Thread(() -> {
+                client.recieveShots();
+            }).start();
+        }
+        
+
         while (gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
@@ -82,9 +91,7 @@ public class GameEngine extends Pane implements Runnable {
                 timer = 0;
             }
         }
-        new Thread(() -> {
-                client.recieveShots();;
-        }).start();
+
     }
 
     private void update() throws InterruptedException {

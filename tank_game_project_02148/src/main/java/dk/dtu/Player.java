@@ -24,6 +24,8 @@ public class Player {
     private int previousY;
 
     private boolean canShoot = true;
+    private long startCooldownTime;
+    private long COOLDOWN; // Eaqul to projectile LIFETIME
 
     public boolean shot = false;
 
@@ -33,7 +35,7 @@ public class Player {
         this.inputHandler = inputHandler;
         this.previousX = x;
         this.previousY = y;
-
+        this.COOLDOWN = ge.projectileLifespan;
         init();
     }
 
@@ -69,9 +71,9 @@ public class Player {
         }
 
         if (inputHandler.shootPressed && canShoot) {
-            System.out.println("YES 1");
+            canShoot = false;
             shot = true;
-            //canShoot = false;
+            startCooldown();
             //Start a timer to reset canShoot;
         }
 
@@ -148,6 +150,16 @@ public class Player {
         gc.drawImage(playerImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
 
         gc.restore();
+    }
+
+    public void startCooldown(){
+        startCooldownTime = System.currentTimeMillis();
+        while(true){
+            if (System.currentTimeMillis() - startCooldownTime >= COOLDOWN) {
+                canShoot = true;
+                return;
+            }
+        }
     }
 
     public Rectangle getHitbox() {
