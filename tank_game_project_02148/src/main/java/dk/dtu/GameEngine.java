@@ -114,7 +114,6 @@ public class GameEngine extends Pane implements Runnable {
                 }
                 break;
             case GAMEOVER:
-                System.out.println("Game Over");
                 break;
             default:
                 break;

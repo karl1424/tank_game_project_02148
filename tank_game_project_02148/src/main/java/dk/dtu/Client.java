@@ -162,8 +162,8 @@ public class Client {
         while (true) {
             try {
                 lobbyShots.get(new ActualField("Game Over"));
-                
-            } catch (Exception e) {
+                System.out.println("Game Over");
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
