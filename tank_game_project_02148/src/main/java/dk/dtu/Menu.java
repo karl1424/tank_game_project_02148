@@ -48,6 +48,11 @@ public class Menu {
                     client.recieveShots();
                 }).start();
             }
+            if (ge.online) {
+                new Thread(() -> {
+                    client.recieveGameOver();
+                }).start();
+            }
             Gamestate.state = Gamestate.PLAYING;
         }
 
@@ -56,6 +61,11 @@ public class Menu {
             if (ge.online) {
                 new Thread(() -> {
                     client.recieveShots();
+                }).start();
+            }
+            if (ge.online) {
+                new Thread(() -> {
+                    client.recieveGameOver();
                 }).start();
             }
             Gamestate.state = Gamestate.PLAYING;
