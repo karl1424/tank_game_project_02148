@@ -161,4 +161,9 @@ public class GameEngine extends Pane implements Runnable {
         repaint(gc);
     }
 
+    public void gameOverScreen() throws InterruptedException {
+        Gamestate.state = Gamestate.GAMEOVER;
+        repaint(gc);
+    }
+
 }

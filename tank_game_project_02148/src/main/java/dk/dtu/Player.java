@@ -33,8 +33,6 @@ public class Player {
     private boolean canShoot = true;
     public boolean shot = false;
 
-    public boolean isActive = false;
-
 
     public Player(GameEngine ge, InputHandler inputHandler, String playerName) {
         this.ge = ge;
@@ -105,9 +103,6 @@ public class Player {
             updateHitbox();
         }
 
-        if(!isActive()) {
-            return;
-        }
     }
 
     private void updateHitbox() {
@@ -209,15 +204,6 @@ public class Player {
 
     public boolean getShot() {
         return shot;
-    }
-
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean b) {
-        isActive = b;
     }
     
 }

@@ -166,18 +166,17 @@ public class Client {
     }
     
     public void sendGameOver() throws InterruptedException {
-        if (player.isActive()) {
-            System.out.println("Looking for Game Over");
-            lobbyShots.put("Game Over");
-        }
+            System.out.println("sending Game Over");
+            lobbyShots.put("Game Over",ge.isHost ? "player1" : "player2");
     }
 
     public void recieveGameOver() {
         while (true) {
             try {
                 System.out.println("Looking for Game Over");
-                lobbyShots.query(new ActualField("Game Over"));
-                System.out.println("Game Over");
+                lobbyShots.get(new ActualField("Game Over"), ge.isHost ? new ActualField("player2") : new ActualField("player1"));
+                System.out.println("Game Over");          
+                ge.gameOverScreen();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
