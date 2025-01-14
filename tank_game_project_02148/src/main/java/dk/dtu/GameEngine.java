@@ -6,9 +6,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
-    public boolean isHost = false;
+    public boolean isHost = true;
     public boolean online = true;
-    public String IP = "localhost";
+    public String IP = "10.209.242.14";
 
     private final int rows = 36;
     private final int cols = 46;
@@ -50,10 +50,10 @@ public class GameEngine extends Pane implements Runnable {
         client = new Client(this, inputHandler);
         menu = new Menu(this, mouseHandler, client);
         grid = new Grid(this);
-        
-        //client.connectToServerHost();
-        //client.connectToServer();
-        
+
+        // client.connectToServerHost();
+        // client.connectToServer();
+
         startGameThread();
     }
 
@@ -78,13 +78,14 @@ public class GameEngine extends Pane implements Runnable {
             lastTime = currentTime;
 
             if (delta >= 1) {
-                new Thread(() -> {
-                    try {
-                        update();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
+
+                try {
+                    update();
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
                 try {
                     repaint(gc);
                 } catch (InterruptedException e) {

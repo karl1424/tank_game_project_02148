@@ -236,9 +236,5 @@ public class Client {
         }
 
     }
-
-
-
-
-    
+  
 }
