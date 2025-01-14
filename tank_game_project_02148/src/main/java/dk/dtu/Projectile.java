@@ -7,10 +7,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public class Projectile {
+    private GameEngine ge;
 
     private int x, y, angle;
-    private int previousX;
-    private int previousY;
+    private int previousX, previousY;
     private int speed = 5;
 
     private int numberOfHits = 0;
@@ -24,7 +24,6 @@ public class Projectile {
     private long LIFETIME = 9000;
 
     private boolean isActive = true;
-    private GameEngine ge;
 
     public Projectile(GameEngine ge, int x, int y, int angle, int numberOfHits) {
         this.numberOfHits = numberOfHits;

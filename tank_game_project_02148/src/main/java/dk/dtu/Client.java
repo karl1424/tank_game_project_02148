@@ -13,40 +13,39 @@ import javafx.scene.paint.Color;
 
 public class Client {
     private Player player;
-    private String playername;
-    private InputHandler inputHandler;
-    private Space server;
-    private Space lobbySend;
-    private Space lobbyGet;
-    private Space lobbyShots;
     private GameEngine ge;
+    private InputHandler inputHandler;
 
-    private int prevX, prevY, prevAngle;
+    private Space server, lobbySend, lobbyGet, lobbyShots;
+    
+    private String playername;
+    
+    private int prevX, prevY, prevAngle, opponentPrevX, opponentPrevY, opponentPrevAngle;
+    private int opponentStartPosX, opponentStartPosY, opponentStartAngle;
+            
+    private boolean startPos = true;
 
     Object[] coordinates;
-    private Image opponentImage;
-    private int opponentPrevX, opponentPrevY, opponentPrevAngle, opponentStartPosX, opponentStartPosY,
-            opponentStartAngle;
-
     ArrayList<Projectile> projectileList = new ArrayList<>();
-
-    private boolean startPos = true;
+    private Image opponentImage;
 
     public Client(GameEngine ge, InputHandler inputHandler) {
         this.ge = ge;
         this.inputHandler = inputHandler;
+
+        int port = 31145;
+        String host = ge.IP;
+        int lobbyID = 0;
+
+        //Offline/Online testing:
         if (!ge.online) {
             ge.isHost = true;
             startPos = false;
         } else {
             startPos = true;
         }
+
         playername = ge.isHost ? "player1" : "player2";
-
-        int port = 31145;
-        String host = ge.IP;
-        int lobbyID = 0;
-
         opponentImage = new Image("file:res/tank2.png");
 
         if (ge.online) {
@@ -75,15 +74,15 @@ public class Client {
         }
         createPlayer();
 
-        // Player 2 starting possitions:
+        //Player 2 starting possitions:
         if (playername == "player1") {
-            opponentStartPosX = 200;
-            opponentStartPosY = 200;
-            opponentStartAngle = 180;
+            opponentStartPosX = player.p2X;
+            opponentStartPosY = player.p2Y;
+            opponentStartAngle = player.p2Angle;
         } else {
-            opponentStartPosX = 100;
-            opponentStartPosY = 100;
-            opponentStartAngle = 0;
+            opponentStartPosX = player.p1X;
+            opponentStartPosY = player.p1Y;
+            opponentStartAngle = player.p1Angle;
         }
     }
 
@@ -176,7 +175,6 @@ public class Client {
             }
         }
 
-        
         if (coordinates != null) {
             startPos = false;
             gc.save();
@@ -191,19 +189,19 @@ public class Client {
             // System.out.println("Drawp player1");
             gc.save();
 
-                if (!startPos) {
-                    gc.translate((double) opponentPrevX + ge.tileSize, (double) (int) opponentPrevY + ge.tileSize);
-                    gc.rotate((double) opponentPrevAngle);
-                } else {
-                    // Draw player 2 in correct starting possition;
-                    gc.translate(opponentStartPosX + ge.tileSize, opponentStartPosY + ge.tileSize);
-                    gc.rotate(opponentStartAngle);
-                }
+            if (!startPos) {
+                gc.translate((double) opponentPrevX + ge.tileSize, (double) (int) opponentPrevY + ge.tileSize);
+                gc.rotate((double) opponentPrevAngle);
+            } else {
+                // Draw player 2 in correct starting possition;
+                gc.translate(opponentStartPosX + ge.tileSize, opponentStartPosY + ge.tileSize);
+                gc.rotate(opponentStartAngle);
+            }
 
-                gc.setFill(Color.BLUE);
-                gc.drawImage(opponentImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
+            gc.setFill(Color.BLUE);
+            gc.drawImage(opponentImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
 
-                gc.restore();
+            gc.restore();
 
         }
 
