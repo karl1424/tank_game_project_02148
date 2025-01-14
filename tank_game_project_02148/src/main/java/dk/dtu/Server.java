@@ -19,7 +19,7 @@ public class Server {
 
         while (true) {
             try {
-                lobbyRequests.get(new ActualField("host"), new FormalField(Integer.class));
+                lobbyRequests.get(new ActualField("host"));
                 new Thread(new lobbyHandeler(IP, port, lobbyID, serverSpace)).start();
                 System.out.println("lobby: " + (lobbyID) + " started");
                 lobbyRequests.put("lobby", lobbyID);

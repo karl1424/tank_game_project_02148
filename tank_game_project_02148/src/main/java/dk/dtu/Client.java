@@ -54,7 +54,9 @@ public class Client {
                 try {
                     String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
                     server = new RemoteSpace(uri);
-                    server.put("host", 1);
+                    server.put("host");
+                    Object [] lobby = server.get(new ActualField ("lobby"), new FormalField(Integer.class));
+                    lobbyID = (int) lobby[1];
                 } catch (Exception e) {
                     System.out.println(e);
                 }
