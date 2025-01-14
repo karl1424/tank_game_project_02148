@@ -35,7 +35,7 @@ public class Client {
 
         int port = 31145;
         String host = ge.IP;
-        int lobbyID = 0;
+        int lobbyID = 3;
 
         // Offline/Online testing:
         if (!ge.online) {
@@ -184,9 +184,9 @@ public class Client {
                 for (int i = 0; i < projectileList.size(); i++) {
                     projectileList.get(i).repaint(gc);
                     projectileList.get(i).update(player.getHitbox(), ge.grid.getGrid());
-                    if (!projectileList.get(i).isActive()) {
-                        projectileList.remove(i);
-                    }
+                    //if (!projectileList.get(i).isActive()) {
+                      //  projectileList.remove(i);
+                    //}
                 }
             }
         }
