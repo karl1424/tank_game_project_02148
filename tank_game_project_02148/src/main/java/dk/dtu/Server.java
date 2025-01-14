@@ -61,7 +61,7 @@ class lobbyHandeler implements Runnable {
         int player2X = 0;
         int player2Y = 0;
         int player2Angle = 0;
-
+        /* 
         try {
             Space lobbyPlayer1 = new RemoteSpace(uri1);
             Space lobbyPlayer2 = new RemoteSpace(uri2);
@@ -88,6 +88,6 @@ class lobbyHandeler implements Runnable {
             running = false;
             System.out.println("Lobby: "+lobbyID+" closed");
             e.printStackTrace();
-        }
+        }*/
     }
 }
