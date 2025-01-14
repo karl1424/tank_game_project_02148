@@ -10,38 +10,41 @@ public class Player {
     private InputHandler inputHandler;
     private GameEngine ge;
 
-    private int x;
-    private int y;
-
     private String playerName;
-    private int angle;
+
+    private int x, y, angle, previousX, previousY;
     private int angleSpeed = 6;
     private int speed = 4;
+
+    //Player 1 Start positions:
+    public int p1X = 100;
+    public int p1Y = 100;
+    public int p1Angle = 0;
+    //Player 2 Start positions:
+    public int p2X = 200;
+    public int p2Y = 200; 
+    public int p2Angle = 180;
 
     private Image playerImage;
     private Rectangle hitbox;
 
-    private int previousX;
-    private int previousY;
-
+    private long startCooldownTime, COOLDOWN;
     private boolean canShoot = true;
-    private long startCooldownTime;
-    private long COOLDOWN; // Eaqul to projectile LIFETIME
-
     public boolean shot = false;
+
 
     public Player(GameEngine ge, InputHandler inputHandler, String playerName) {
         this.ge = ge;
         this.playerName = playerName;
         this.inputHandler = inputHandler;
         if(playerName == "player1"){
-            x = 100;
-            y = 100;
-            angle = 0;
+            x = p1X;
+            y = p1Y;
+            angle = p1Angle;
         } else {
-            x = 200;
-            y = 200;
-            angle = 180;
+            x = p2X;
+            y = p2Y;
+            angle = p1Angle;
         }
         this.previousX = x;
         this.previousY = y;
