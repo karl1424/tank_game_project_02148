@@ -79,12 +79,13 @@ public class GameEngine extends Pane implements Runnable {
 
             if (delta >= 1) {
 
-                try {
-                    update();
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                new Thread(() -> {
+                    try {
+                        update();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
 
                 try {
                     repaint(gc);
