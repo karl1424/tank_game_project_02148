@@ -2,6 +2,7 @@ package dk.dtu;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -20,12 +21,13 @@ public class Projectile {
     private Rectangle projectileHitbox;
 
     private long creationTime;
-    private long LIFETIME = 3000;
+    private long LIFETIME = 9000;
 
     private boolean isActive = true;
     private GameEngine ge;
 
-    public Projectile(GameEngine ge, int x, int y, int angle) {
+    public Projectile(GameEngine ge, int x, int y, int angle, int numberOfHits) {
+        this.numberOfHits = numberOfHits;
         this.ge = ge;
         this.x = x;
         this.y = y;
@@ -37,7 +39,7 @@ public class Projectile {
         this.projectileHitbox = new Rectangle(x - 4, y - 4, 8, 8);
     }
 
-    public void update(Rectangle tankHitbox, Rectangle[][] grid) {
+    public void update(Circle tankHitbox, Rectangle[][] grid) {
         if (!isActive) {
             return;
         }
@@ -56,7 +58,10 @@ public class Projectile {
         y += (int) Math.round(Math.sin(angleRadians) * speed);
 
         updateHitbox();
-        bounceOffWall();
+
+        if (x != previousX || y != previousY) {
+            bounceOffWall();
+        }
 
         if (hitHorizontalWall || hitVerticalWall) {
             x = previousX;

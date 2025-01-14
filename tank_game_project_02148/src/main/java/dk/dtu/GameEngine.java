@@ -132,10 +132,9 @@ public class GameEngine extends Pane implements Runnable {
                 break;
         }
 
-        /*
-         * if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
-         * this.getChildren().add(client.getPlayer().getHitbox());
-         * }
-         */
+        /*if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
+            this.getChildren().add(client.getPlayer().getHitbox());
+        }*/
+
     }
 }

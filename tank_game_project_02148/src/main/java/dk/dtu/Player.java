@@ -3,6 +3,7 @@ package dk.dtu;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -19,7 +20,7 @@ public class Player {
     private int speed = 4;
 
     private Image playerImage;
-    private Rectangle hitbox;
+    private Circle hitbox;
 
     private int previousX;
     private int previousY;
@@ -34,7 +35,7 @@ public class Player {
         this.ge = ge;
         this.playerName = playerName;
         this.inputHandler = inputHandler;
-        if(playerName == "player1"){
+        if (playerName == "player1") {
             x = 100;
             y = 100;
             angle = 0;
@@ -51,7 +52,7 @@ public class Player {
 
     private void init() {
         playerImage = new Image("file:res/tank1.png");
-        hitbox = new Rectangle(x, y, ge.tileSize * 2, ge.tileSize * 2);
+        hitbox = new Circle(x + ge.tileSize, y + ge.tileSize, ge.tileSize - 2);
         hitbox.setFill(Color.TRANSPARENT);
         hitbox.setStroke(Color.RED);
         hitbox.setStrokeWidth(2);
@@ -83,39 +84,37 @@ public class Player {
             y -= (int) Math.round(Math.sin(angleRadians) * speed);
         }
 
+        updateHitbox();
+
         if (inputHandler.shootPressed && canShoot) {
             canShoot = false;
             shot = true;
             startCooldown();
-            //Start a timer to reset canShoot;
+            // Start a timer to reset canShoot;
         }
-
-        
-
-        updateHitbox();
 
         if (checkCollision()) {
             x = previousX;
             y = previousY;
-            //angle = previousAngle;
+            // angle = previousAngle;
             updateHitbox();
         }
     }
 
     private void updateHitbox() {
-        hitbox.setX(x);
-        hitbox.setY(y);
-        hitbox.setRotate(angle);
+        hitbox.setCenterX(x + ge.tileSize);
+        hitbox.setCenterY(y + ge.tileSize);
+        // hitbox.setRotate(angle);
         // System.out.println(hitbox.getX() + ", " + hitbox.getY());
     }
 
     private boolean checkCollision() {
         Rectangle[][] grid = ge.grid.getGrid();
 
-        int startX = (int) (hitbox.getX() / ge.tileSize - 2);
-        int startY = (int) (hitbox.getY() / ge.tileSize - 2);
-        int endX = (int) ((hitbox.getX() + 2 * ge.tileSize) / ge.tileSize + 2);
-        int endY = (int) ((hitbox.getY() + 2 * ge.tileSize) / ge.tileSize + 2);
+        int startX = (int) ((hitbox.getCenterX() - ge.tileSize) / ge.tileSize - 2);
+        int startY = (int) ((hitbox.getCenterY() - ge.tileSize) / ge.tileSize - 2);
+        int endX = (int) ((hitbox.getCenterX() + ge.tileSize) / ge.tileSize + 2);
+        int endY = (int) ((hitbox.getCenterY() + ge.tileSize) / ge.tileSize + 2);
 
         // System.out.println(startX + ", " + startY + ", " + endX + ", " + endY);
 
@@ -163,11 +162,19 @@ public class Player {
         gc.drawImage(playerImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
 
         gc.restore();
+
+        /*gc.setStroke(Color.RED);
+        gc.setLineWidth(2);
+        gc.strokeOval(
+                hitbox.getCenterX() - hitbox.getRadius(),
+                hitbox.getCenterY() - hitbox.getRadius(),
+                hitbox.getRadius() * 2,
+                hitbox.getRadius() * 2);*/
     }
 
-    public void startCooldown(){
+    public void startCooldown() {
         startCooldownTime = System.currentTimeMillis();
-        while(true){
+        while (true) {
             if (System.currentTimeMillis() - startCooldownTime >= COOLDOWN) {
                 canShoot = true;
                 return;
@@ -175,7 +182,7 @@ public class Player {
         }
     }
 
-    public Rectangle getHitbox() {
+    public Circle getHitbox() {
         return hitbox;
     }
 
@@ -191,7 +198,7 @@ public class Player {
         return angle;
     }
 
-    public boolean getShot(){
+    public boolean getShot() {
         return shot;
     }
 }

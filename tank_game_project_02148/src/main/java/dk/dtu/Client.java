@@ -100,7 +100,7 @@ public class Client {
 
     public void sendCoordinate() throws InterruptedException {
         if (player.getShot()) {
-            spawnProjectile(player.getX(), player.getY(), player.getAngle());
+            spawnProjectile(player.getX(), player.getY(), player.getAngle(), 0);
             if (ge.online) {
                 lobbyShots.put(playername);
             }
@@ -148,19 +148,19 @@ public class Client {
         while (true) {
             try {
                 lobbyShots.get(ge.isHost ? new ActualField("player2") : new ActualField("player1"));
-                spawnProjectile((int) coordinates[1], (int) coordinates[2], (int) coordinates[3]);
+                spawnProjectile((int) coordinates[1], (int) coordinates[2], (int) coordinates[3], 1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void spawnProjectile(int x, int y, int angle) {
+    public void spawnProjectile(int x, int y, int angle, int numberOfHits) {
         double angleRadians = Math.toRadians(angle);
         int projectileX = (int) Math.round(x + Math.cos(angleRadians) * ge.tileSize + ge.tileSize);
         int projectileY = (int) Math.round(y + Math.sin(angleRadians) * ge.tileSize + ge.tileSize);
 
-        projectileList.add(new Projectile(ge, projectileX, projectileY, angle));
+        projectileList.add(new Projectile(ge, projectileX, projectileY, angle, numberOfHits));
     }
 
     public void drawOpponent(GraphicsContext gc) {
