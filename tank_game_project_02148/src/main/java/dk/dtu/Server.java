@@ -86,7 +86,7 @@ class lobbyHandeler implements Runnable {
             serverSpace.remove(lobbyID + "player2");
             serverSpace.remove(lobbyID + "shots");
             running = false;
-            System.out.println("Lobby: "+LobbyID+" closed");
+            System.out.println("Lobby: "+lobbyID+" closed");
             e.printStackTrace();
         }
     }
