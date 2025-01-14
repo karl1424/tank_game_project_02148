@@ -23,7 +23,7 @@ public class GameEngine extends Pane implements Runnable {
     private InputHandler inputHandler;
     public Grid grid;
 
-    private Client client;
+    public Client client;
     private Menu menu;
 
     public long projectileLifespan = 9000;
@@ -67,6 +67,12 @@ public class GameEngine extends Pane implements Runnable {
             }).start();
         }
 
+        if (online) {
+            new Thread(() -> {
+                client.recieveGameOver();
+            }).start();
+        }
+
         while (gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
@@ -107,6 +113,9 @@ public class GameEngine extends Pane implements Runnable {
                     client.recieveCoordinates();
                 }
                 break;
+            case GAMEOVER:
+                System.out.println("Game Over");
+                break;
             default:
                 break;
         }
@@ -128,13 +137,28 @@ public class GameEngine extends Pane implements Runnable {
 
                 client.drawOpponent(gc);
                 break;
+            case GAMEOVER:
+                gc.setFill(Color.LIGHTGRAY);
+                gc.fillRect(0, 0, screenWidth, screenHeight);
+                this.getChildren().removeAll();
+                menu.draw(gc);
+                break;
             default:
                 break;
         }
 
-        /*if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
-            this.getChildren().add(client.getPlayer().getHitbox());
-        }*/
+        /*
+         * if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
+         * this.getChildren().add(client.getPlayer().getHitbox());
+         * }
+         */
 
     }
+
+    public void stopGame() {
+        client.getPlayer().setActive(true);
+        Gamestate.state = Gamestate.GAMEOVER;
+        repaint(gc);
+    }
+
 }

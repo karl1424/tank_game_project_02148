@@ -110,7 +110,9 @@ public class Client {
             if (ge.online) {
                 try {
                     lobbySend.put(playername, player.getX(), player.getY(), player.getAngle());
-
+                    if (player.isActive()) {
+                        lobbyShots.put("Game Over");
+                    }
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -154,6 +156,17 @@ public class Client {
         }
     }
 
+    public void recieveGameOver() {
+        while (true) {
+            try {
+                lobbyShots.get(new ActualField("Game Over"));
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void spawnProjectile(int x, int y, int angle, int numberOfHits) {
         double angleRadians = Math.toRadians(angle);
         int projectileX = (int) Math.round(x + Math.cos(angleRadians) * ge.tileSize + ge.tileSize);
@@ -161,6 +174,7 @@ public class Client {
 
         projectileList.add(new Projectile(ge, projectileX, projectileY, angle, numberOfHits));
     }
+
 
     public void drawOpponent(GraphicsContext gc) {
         if (projectileList != null) {
@@ -206,4 +220,7 @@ public class Client {
         }
 
     }
+
+
+    
 }
