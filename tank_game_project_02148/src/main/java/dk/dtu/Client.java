@@ -35,7 +35,7 @@ public class Client {
 
         int port = 31145;
         String host = ge.IP;
-        int lobbyID = 3;
+        int lobbyID = 0;
 
         // Offline/Online testing:
         if (!ge.online) {
@@ -112,9 +112,6 @@ public class Client {
             if (ge.online) {
                 try {
                     lobbySend.put(playername, player.getX(), player.getY(), player.getAngle());
-                    if (player.isActive()) {
-                        lobbyShots.put("Game Over");
-                    }
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -157,11 +154,19 @@ public class Client {
             }
         }
     }
+    
+    public void sendGameOver() throws InterruptedException {
+        if (player.isActive()) {
+            System.out.println("Looking for Game Over");
+            lobbyShots.put("Game Over");
+        }
+    }
 
     public void recieveGameOver() {
         while (true) {
             try {
-                lobbyShots.get(new ActualField("Game Over"));
+                System.out.println("Looking for Game Over");
+                lobbyShots.query(new ActualField("Game Over"));
                 System.out.println("Game Over");
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -178,7 +183,7 @@ public class Client {
     }
 
 
-    public void drawOpponent(GraphicsContext gc) {
+    public void drawOpponent(GraphicsContext gc) throws InterruptedException {
         if (projectileList != null) {
             if (projectileList.size() != 0) {
                 for (int i = 0; i < projectileList.size(); i++) {
@@ -222,6 +227,8 @@ public class Client {
         }
 
     }
+
+
 
 
     

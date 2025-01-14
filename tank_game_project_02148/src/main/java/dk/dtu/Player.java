@@ -217,7 +217,7 @@ public class Player {
     }
 
     public void setActive(boolean b) {
-        b = isActive;
+        isActive = b;
     }
     
 }

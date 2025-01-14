@@ -87,7 +87,11 @@ public class GameEngine extends Pane implements Runnable {
                         e.printStackTrace();
                     }
                 }).start();
-                repaint(gc);
+                try {
+                    repaint(gc);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 delta--;
                 drawCount++;
             }
@@ -107,7 +111,6 @@ public class GameEngine extends Pane implements Runnable {
                 break;
             case PLAYING:
                 client.getPlayer().update();
-
                 client.sendCoordinate();
                 if (online) {
                     client.recieveCoordinates();
@@ -120,7 +123,7 @@ public class GameEngine extends Pane implements Runnable {
         }
     }
 
-    private void repaint(GraphicsContext gc) {
+    private void repaint(GraphicsContext gc) throws InterruptedException {
         switch (Gamestate.state) {
             case MENU:
                 gc.setFill(Color.LIGHTGRAY);
@@ -154,8 +157,8 @@ public class GameEngine extends Pane implements Runnable {
 
     }
 
-    public void stopGame() {
-        client.getPlayer().setActive(true);
+    public void stopGame() throws InterruptedException {
+        client.sendGameOver();
         Gamestate.state = Gamestate.GAMEOVER;
         repaint(gc);
     }

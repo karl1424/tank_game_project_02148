@@ -38,7 +38,7 @@ public class Projectile {
         this.projectileHitbox = new Rectangle(x - 4, y - 4, 8, 8);
     }
 
-    public void update(Circle tankHitbox, Rectangle[][] grid) {
+    public void update(Circle tankHitbox, Rectangle[][] grid) throws InterruptedException {
         if (!isActive) {
             return;
         }
