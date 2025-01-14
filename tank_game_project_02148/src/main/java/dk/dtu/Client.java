@@ -72,7 +72,9 @@ public class Client {
                 try {
                     String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
                     server = new RemoteSpace(uri);
-                    server.put("host", 1);
+                    server.put("host");
+                    Object [] lobby = server.get(new ActualField ("lobby"), new FormalField(Integer.class));
+                    lobbyID = (int) lobby[1];
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -120,7 +122,6 @@ public class Client {
             if (ge.online) {
                 try {
                     lobbySend.put(playername, player.getX(), player.getY(), player.getAngle());
-
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -163,6 +164,25 @@ public class Client {
             }
         }
     }
+    
+    public void sendGameOver() throws InterruptedException {
+        if (player.isActive()) {
+            System.out.println("Looking for Game Over");
+            lobbyShots.put("Game Over");
+        }
+    }
+
+    public void recieveGameOver() {
+        while (true) {
+            try {
+                System.out.println("Looking for Game Over");
+                lobbyShots.query(new ActualField("Game Over"));
+                System.out.println("Game Over");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void spawnProjectile(int x, int y, int angle, int numberOfHits) {
         double angleRadians = Math.toRadians(angle);
@@ -172,15 +192,16 @@ public class Client {
         projectileList.add(new Projectile(ge, projectileX, projectileY, angle, numberOfHits));
     }
 
-    public void drawOpponent(GraphicsContext gc) {
+
+    public void drawOpponent(GraphicsContext gc) throws InterruptedException {
         if (projectileList != null) {
             if (projectileList.size() != 0) {
                 for (int i = 0; i < projectileList.size(); i++) {
                     projectileList.get(i).repaint(gc);
                     projectileList.get(i).update(player.getHitbox(), ge.grid.getGrid());
-                    if (!projectileList.get(i).isActive()) {
-                        projectileList.remove(i);
-                    }
+                    //if (!projectileList.get(i).isActive()) {
+                      //  projectileList.remove(i);
+                    //}
                 }
             }
         }
@@ -216,4 +237,9 @@ public class Client {
         }
 
     }
+
+
+
+
+    
 }

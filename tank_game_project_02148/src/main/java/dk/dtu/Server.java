@@ -19,7 +19,7 @@ public class Server {
 
         while (true) {
             try {
-                lobbyRequests.get(new ActualField("host"), new FormalField(Integer.class));
+                lobbyRequests.get(new ActualField("host"));
                 new Thread(new lobbyHandeler(IP, port, lobbyID, serverSpace)).start();
                 System.out.println("lobby: " + (lobbyID) + " started");
                 lobbyRequests.put("lobby", lobbyID);
@@ -78,12 +78,15 @@ class lobbyHandeler implements Runnable {
                     serverSpace.remove(lobbyID + "player2");
                     serverSpace.remove(lobbyID + "shots");
                     running = false;
-                } else {
-                    Thread.sleep(120000);
                 }
                 
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
+            serverSpace.remove(lobbyID + "player1");
+            serverSpace.remove(lobbyID + "player2");
+            serverSpace.remove(lobbyID + "shots");
+            running = false;
+            System.out.println("Lobby: "+lobbyID+" closed");
             e.printStackTrace();
         }*/
     }

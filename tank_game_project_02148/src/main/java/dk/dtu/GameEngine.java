@@ -24,7 +24,7 @@ public class GameEngine extends Pane implements Runnable {
     private MouseHandler mouseHandler;
     public Grid grid;
 
-    private Client client;
+    public Client client;
     private Menu menu;
 
     public long projectileLifespan = 9000;
@@ -85,7 +85,11 @@ public class GameEngine extends Pane implements Runnable {
                         e.printStackTrace();
                     }
                 }).start();
-                repaint(gc);
+                try {
+                    repaint(gc);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 delta--;
                 drawCount++;
             }
@@ -105,18 +109,19 @@ public class GameEngine extends Pane implements Runnable {
                 break;
             case PLAYING:
                 client.getPlayer().update();
-
                 client.sendCoordinate();
                 if (online) {
                     client.recieveCoordinates();
                 }
+                break;
+            case GAMEOVER:
                 break;
             default:
                 break;
         }
     }
 
-    private void repaint(GraphicsContext gc) {
+    private void repaint(GraphicsContext gc) throws InterruptedException {
         switch (Gamestate.state) {
             case MENU:
                 gc.setFill(Color.LIGHTGRAY);
@@ -132,13 +137,28 @@ public class GameEngine extends Pane implements Runnable {
 
                 client.drawOpponent(gc);
                 break;
+            case GAMEOVER:
+                gc.setFill(Color.LIGHTGRAY);
+                gc.fillRect(0, 0, screenWidth, screenHeight);
+                this.getChildren().removeAll();
+                menu.draw(gc);
+                break;
             default:
                 break;
         }
 
-        /*if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
-            this.getChildren().add(client.getPlayer().getHitbox());
-        }*/
+        /*
+         * if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
+         * this.getChildren().add(client.getPlayer().getHitbox());
+         * }
+         */
 
     }
+
+    public void stopGame() throws InterruptedException {
+        client.sendGameOver();
+        Gamestate.state = Gamestate.GAMEOVER;
+        repaint(gc);
+    }
+
 }
