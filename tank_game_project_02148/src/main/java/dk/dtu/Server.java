@@ -7,7 +7,7 @@ import org.jspace.*;
 
 public class Server {
     public static void main(String[] args) throws UnknownHostException, IOException {
-        final String IP = "10.134.17.47";
+        final String IP = "localhost";
         final String port = "31145";
         int lobbyID = 0;
         SpaceRepository serverSpace = new SpaceRepository();
@@ -61,15 +61,15 @@ class lobbyHandeler implements Runnable {
         int player2X = 0;
         int player2Y = 0;
         int player2Angle = 0;
-
+        /*
         try {
             Space lobbyPlayer1 = new RemoteSpace(uri1);
             Space lobbyPlayer2 = new RemoteSpace(uri2);
-
+            
             while (running) {
                 Object[] player1coord = lobbyPlayer1.queryp();
                 Object[] player2coord = lobbyPlayer2.queryp();
-
+                
                 if (player1X == (int) player1coord[1] && player1Y == (int) player1coord[2]
                         && player1Angle == (int) player1coord[3]
                         && player2X == (int) player2coord[1] && player2Y == (int) player2coord[2]
@@ -81,9 +81,10 @@ class lobbyHandeler implements Runnable {
                 } else {
                     Thread.sleep(120000);
                 }
+                
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

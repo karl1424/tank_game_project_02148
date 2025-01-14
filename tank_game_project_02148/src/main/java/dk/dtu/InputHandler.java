@@ -4,7 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public class InputHandler implements EventHandler <KeyEvent>{
+public class InputHandler implements EventHandler<KeyEvent> {
     public boolean upPressed, downPressed, leftPressed, rightPressed, shootPressed, enterPressed, escapePressed = false;
 
     @Override
@@ -37,6 +37,5 @@ public class InputHandler implements EventHandler <KeyEvent>{
                 break;
         }
     }
-
 
 }

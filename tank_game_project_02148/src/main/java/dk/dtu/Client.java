@@ -25,6 +25,9 @@ public class Client {
 
     private boolean startPos = true;
 
+    private int port, lobbyID;
+    private String host;
+
     Object[] coordinates;
     ArrayList<Projectile> projectileList = new ArrayList<>();
     private Image opponentImage;
@@ -33,9 +36,9 @@ public class Client {
         this.ge = ge;
         this.inputHandler = inputHandler;
 
-        int port = 31145;
-        String host = ge.IP;
-        int lobbyID = 0;
+        this.port = 31145;
+        this.host = ge.IP;
+        this.lobbyID = 0;
 
         // Offline/Online testing:
         if (!ge.online) {
@@ -48,30 +51,6 @@ public class Client {
         playername = ge.isHost ? "player1" : "player2";
         opponentImage = new Image("file:res/tank2.png");
 
-        if (ge.online) {
-            // Connect to server
-            if (ge.isHost) {
-                try {
-                    String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
-                    server = new RemoteSpace(uri);
-                    server.put("host", 1);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-            }
-            // Connect to lobby
-            try {
-                String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID + "player1" + "?conn";
-                String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
-                String uriS = "tcp://" + host + ":" + port + "/" + lobbyID + "shots" + "?conn";
-                lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
-                lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
-                lobbyShots = new RemoteSpace(uriS);
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-
-        }
         createPlayer();
 
         // Player 2 starting possitions:
@@ -83,6 +62,37 @@ public class Client {
             opponentStartPosX = player.p1X;
             opponentStartPosY = player.p1Y;
             opponentStartAngle = player.p1Angle;
+        }
+    }
+
+    public void connectToServerHost() {
+        if (ge.online) {
+            // Connect to server
+            if (ge.isHost) {
+                try {
+                    String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
+                    server = new RemoteSpace(uri);
+                    server.put("host", 1);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+        }
+    }
+
+    public void connectToServer() {
+        // Connect to lobby
+        if (ge.online) {
+            try {
+                String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID + "player1" + "?conn";
+                String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
+                String uriS = "tcp://" + host + ":" + port + "/" + lobbyID + "shots" + "?conn";
+                lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
+                lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
+                lobbyShots = new RemoteSpace(uriS);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
     }
 

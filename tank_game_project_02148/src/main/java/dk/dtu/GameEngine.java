@@ -6,21 +6,22 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
-    public boolean isHost = false;
+    public boolean isHost = true;
     public boolean online = true;
-    public String IP = "10.141.156.47";
+    public String IP = "localhost";
 
     private final int rows = 36;
     private final int cols = 46;
     public final int tileSize = 16;
-    private final int screenWidth = tileSize * cols;
-    private final int screenHeight = tileSize * rows;
+    public final int screenWidth = tileSize * cols;
+    public final int screenHeight = tileSize * rows;
     private final int fps = 30;
 
     private Canvas canvas;
     private Thread gameThread;
     private GraphicsContext gc;
     private InputHandler inputHandler;
+    private MouseHandler mouseHandler;
     public Grid grid;
 
     private Client client;
@@ -35,15 +36,24 @@ public class GameEngine extends Pane implements Runnable {
         canvas = new Canvas(screenWidth, screenHeight);
         gc = canvas.getGraphicsContext2D();
         inputHandler = new InputHandler();
+        mouseHandler = new MouseHandler();
+
+        this.setOnMousePressed(mouseHandler);
+        this.setOnMouseReleased(mouseHandler);
+        this.setOnMouseMoved(mouseHandler);
 
         this.setOnKeyPressed(inputHandler);
         this.setOnKeyReleased(inputHandler);
 
         this.getChildren().add(canvas);
 
-        menu = new Menu(this, inputHandler);
         client = new Client(this, inputHandler);
+        menu = new Menu(this, mouseHandler, client);
         grid = new Grid(this);
+        
+        //client.connectToServerHost();
+        //client.connectToServer();
+        
         startGameThread();
     }
 
@@ -60,12 +70,6 @@ public class GameEngine extends Pane implements Runnable {
         long currentTime;
         long timer = 0;
         int drawCount = 0;
-
-        if (online) {
-            new Thread(() -> {
-                client.recieveShots();
-            }).start();
-        }
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
