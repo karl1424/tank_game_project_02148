@@ -147,9 +147,8 @@ public class Client {
 
     public void spawnProjectile(int x, int y, int angle) {
         double angleRadians = Math.toRadians(angle);
-        double offset = 1.6 * ge.tileSize;
-        int projectileX = (int) Math.round(x + Math.cos(angleRadians) * offset + ge.tileSize);
-        int projectileY = (int) Math.round(y + Math.sin(angleRadians) * offset + ge.tileSize);
+        int projectileX = (int) Math.round(x + Math.cos(angleRadians) * ge.tileSize + ge.tileSize);
+        int projectileY = (int) Math.round(y + Math.sin(angleRadians) * ge.tileSize + ge.tileSize);
 
         projectileList.add(new Projectile(ge, projectileX, projectileY, angle));
     }

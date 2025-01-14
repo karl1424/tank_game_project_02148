@@ -2,7 +2,6 @@ package dk.dtu;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -12,6 +11,8 @@ public class Projectile {
     private int previousX;
     private int previousY;
     private int speed = 5;
+
+    private int numberOfHits = 0;
 
     private boolean hitVerticalWall = false;
     private boolean hitHorizontalWall = false;
@@ -66,9 +67,13 @@ public class Projectile {
             hitVerticalWall = false;
         }
 
-        if (projectileHitbox.intersects(tankHitbox.getBoundsInLocal())) {
-            isActive = false;
+        if (numberOfHits > 0) {
+            if (projectileHitbox.intersects(tankHitbox.getBoundsInLocal())) {
+                isActive = false;
+            }
         }
+
+        //System.out.println(x + ", " + y + ", " + numberOfHits);
 
     }
 
@@ -133,6 +138,7 @@ public class Projectile {
             } else if (maxHeight < maxWidth) {
                 hitHorizontalWall = true;
             }
+            numberOfHits++;
         }
 
         /*
@@ -162,11 +168,13 @@ public class Projectile {
     }
 
     private void updateAngle() {
-        /*if (hitVerticalWall && hitHorizontalWall) {
-            angle = (angle + 180) % 360; // Reverse completely
-        } else*/
+        /*
+         * if (hitVerticalWall && hitHorizontalWall) {
+         * angle = (angle + 180) % 360; // Reverse completely
+         * } else
+         */
         if (hitVerticalWall) {
-            angle = (angle > 90 && angle < 270) ? 180 - angle : 180 - angle;
+            angle = 180 - angle;
         } else if (hitHorizontalWall) {
             angle = -angle;
         }

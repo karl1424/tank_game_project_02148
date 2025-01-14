@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
     public boolean isHost = true;
-    public boolean online = true;
+    public boolean online = false;
     public String IP = "10.134.17.47";
 
     private final int rows = 36;
@@ -24,6 +24,7 @@ public class GameEngine extends Pane implements Runnable {
     public Grid grid;
 
     private Client client;
+    private Menu menu;
 
     public long projectileLifespan = 3000;
 
@@ -40,6 +41,7 @@ public class GameEngine extends Pane implements Runnable {
 
         this.getChildren().add(canvas);
 
+        menu = new Menu(this, inputHandler);
         client = new Client(this, inputHandler);
         grid = new Grid(this);
         startGameThread();
@@ -59,12 +61,11 @@ public class GameEngine extends Pane implements Runnable {
         long timer = 0;
         int drawCount = 0;
 
-        if(online){
+        if (online) {
             new Thread(() -> {
                 client.recieveShots();
             }).start();
         }
-        
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
@@ -94,21 +95,42 @@ public class GameEngine extends Pane implements Runnable {
     }
 
     private void update() throws InterruptedException {
-        client.getPlayer().update();
+        switch (Gamestate.state) {
+            case MENU:
+                menu.update();
+                break;
+            case PLAYING:
+                client.getPlayer().update();
 
-        client.sendCoordinate();
-        if (online) {
-            client.recieveCoordinates();
+                client.sendCoordinate();
+                if (online) {
+                    client.recieveCoordinates();
+                }
+                break;
+            default:
+                break;
         }
     }
 
     private void repaint(GraphicsContext gc) {
-        gc.setFill(Color.LIGHTGRAY);
-        gc.fillRect(0, 0, screenWidth, screenHeight);
-        grid.drawGrid(gc);
-        client.getPlayer().repaint(gc);
+        switch (Gamestate.state) {
+            case MENU:
+                gc.setFill(Color.LIGHTGRAY);
+                gc.fillRect(0, 0, screenWidth, screenHeight);
+                this.getChildren().removeAll();
+                menu.draw(gc);
+                break;
+            case PLAYING:
+                gc.setFill(Color.LIGHTGRAY);
+                gc.fillRect(0, 0, screenWidth, screenHeight);
+                grid.drawGrid(gc);
+                client.getPlayer().repaint(gc);
 
-        client.drawOpponent(gc);
+                client.drawOpponent(gc);
+                break;
+            default:
+                break;
+        }
 
         /*
          * if (!this.getChildren().contains(client.getPlayer().getHitbox())) {

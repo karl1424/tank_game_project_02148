@@ -16,7 +16,7 @@ public class Player {
 
     private int angle = 0;
     private int angleSpeed = 6;
-    private int speed = 5;
+    private int speed = 4;
 
     private Image playerImage;
     private Rectangle hitbox;
@@ -52,6 +52,10 @@ public class Player {
     public void update() {
         previousX = x;
         previousY = y;
+
+        if (inputHandler.escapePressed) {
+            Gamestate.state = Gamestate.MENU;
+        }
 
         if (inputHandler.leftPressed) {
             angle -= angleSpeed;
