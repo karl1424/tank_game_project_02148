@@ -21,7 +21,7 @@ public class Projectile {
     private Rectangle projectileHitbox;
 
     private long creationTime;
-    private long LIFETIME = 9000;
+    private long LIFETIME;
 
     private boolean isActive = true;
 

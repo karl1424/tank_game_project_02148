@@ -6,9 +6,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
-    public boolean isHost = true;
-    public boolean online = false;
-    public String IP = "10.134.17.47";
+    public boolean isHost = false;
+    public boolean online = true;
+    public String IP = "10.141.156.47";
 
     private final int rows = 36;
     private final int cols = 46;
@@ -26,7 +26,7 @@ public class GameEngine extends Pane implements Runnable {
     private Client client;
     private Menu menu;
 
-    public long projectileLifespan = 3000;
+    public long projectileLifespan = 9000;
 
     public GameEngine() {
         this.setPrefSize(screenWidth, screenHeight);

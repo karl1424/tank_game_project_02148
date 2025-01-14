@@ -17,12 +17,12 @@ public class Client {
     private InputHandler inputHandler;
 
     private Space server, lobbySend, lobbyGet, lobbyShots;
-    
+
     private String playername;
-    
+
     private int prevX, prevY, prevAngle, opponentPrevX, opponentPrevY, opponentPrevAngle;
     private int opponentStartPosX, opponentStartPosY, opponentStartAngle;
-            
+
     private boolean startPos = true;
 
     Object[] coordinates;
@@ -37,7 +37,7 @@ public class Client {
         String host = ge.IP;
         int lobbyID = 0;
 
-        //Offline/Online testing:
+        // Offline/Online testing:
         if (!ge.online) {
             ge.isHost = true;
             startPos = false;
@@ -74,7 +74,7 @@ public class Client {
         }
         createPlayer();
 
-        //Player 2 starting possitions:
+        // Player 2 starting possitions:
         if (playername == "player1") {
             opponentStartPosX = player.p2X;
             opponentStartPosY = player.p2Y;
@@ -99,11 +99,11 @@ public class Client {
 
     public void sendCoordinate() throws InterruptedException {
         if (player.getShot()) {
+            player.shot = false;
             spawnProjectile(player.getX(), player.getY(), player.getAngle(), 0);
             if (ge.online) {
                 lobbyShots.put(playername);
             }
-            player.shot = false;
         }
 
         if (prevX != player.getX() || prevY != player.getY() || prevAngle != player.getAngle()) {
