@@ -73,17 +73,19 @@ public class Join {
                         if (occupied == null) {
                             client.lobbyShots.put("occupied");
                             client.connectToServer();
+                            new Thread(() -> client.recieveGameStart()).start();
+                            new Thread(() -> client.recieveLeft()).start();
+                            Gamestate.state = Gamestate.LOBBY;
                         } else {
                             System.out.println("Lobby is full");
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    new Thread(() -> client.recieveGameStart()).start();
-                    new Thread(() -> client.recieveLeft()).start();
+
                 }
                 textBoxContent = "";
-                Gamestate.state = Gamestate.LOBBY;
+                
 
             }
 
