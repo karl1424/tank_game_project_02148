@@ -1,5 +1,6 @@
 package dk.dtu;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.jspace.ActualField;
@@ -94,6 +95,15 @@ public class Client {
         }
     }
 
+    public void initLobby() {
+        String uriS = "tcp://" + host + ":" + port + "/" + lobbyID + "shots" + "?conn";
+        try {
+            lobbyShots = new RemoteSpace(uriS);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void connectToServer() {
         // Connect to lobby
         if (ge.online) {
@@ -101,10 +111,8 @@ public class Client {
             try {
                 String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID + "player1" + "?conn";
                 String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
-                String uriS = "tcp://" + host + ":" + port + "/" + lobbyID + "shots" + "?conn";
                 lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
                 lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
-                lobbyShots = new RemoteSpace(uriS);
             } catch (Exception e) {
                 System.out.println(e);
             }

@@ -51,14 +51,9 @@ public class Lobby {
                 }
             }
             if (goBackHover) {
-                ge.isHost = false;
-                if (ge.isHost) {
-                    client.sendLeft();
-                }
-                Gamestate.state = Gamestate.PLAYING;
-            } else if (goBackHover) {
                 // RESET LOBBY!!!
                 if (ge.isHost) {
+                    client.sendLeft();
                     client.closeLobby();
                 } else {
                     try {

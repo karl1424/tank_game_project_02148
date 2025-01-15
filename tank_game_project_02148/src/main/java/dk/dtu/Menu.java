@@ -46,6 +46,7 @@ public class Menu {
                 client.setPlayerNames();
                 client.connectToServerHost();
                 client.connectToServer();
+                client.initLobby();
                 Gamestate.state = Gamestate.LOBBY;
             } else if (joinHover) {
                 Gamestate.state = Gamestate.JOIN;

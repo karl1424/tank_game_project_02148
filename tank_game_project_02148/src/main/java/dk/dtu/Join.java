@@ -54,9 +54,9 @@ public class Join {
 
         if (mouseHandler.wasMouseClicked()) {
             if (mouseHandler.getMouseX() >= textBoxX &&
-                mouseHandler.getMouseX() <= textBoxX + textBoxWidth &&
-                mouseHandler.getMouseY() >= textBoxY &&
-                mouseHandler.getMouseY() <= textBoxY + textBoxHeight) {
+                    mouseHandler.getMouseX() <= textBoxX + textBoxWidth &&
+                    mouseHandler.getMouseY() >= textBoxY &&
+                    mouseHandler.getMouseY() <= textBoxY + textBoxHeight) {
                 textBoxFocused = true;
             } else {
                 textBoxFocused = false;
@@ -65,27 +65,26 @@ public class Join {
             if (joinHover) {
                 client.setPlayerNames();
                 client.setLobbyID(Integer.parseInt(textBoxContent));
-                
+
                 if (ge.online) {
+                    client.initLobby();
                     try {
-                        Object [] occupied = client.lobbyShots.query(new ActualField("occupied"));
-                        if (occupied == null){
+                        Object[] occupied = client.lobbyShots.queryp(new ActualField("occupied"));
+                        if (occupied == null) {
                             client.lobbyShots.put("occupied");
                             client.connectToServer();
                         } else {
                             System.out.println("Lobby is full");
                         }
-                        
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    client.connectToServer();
                     new Thread(() -> client.recieveGameStart()).start();
                     new Thread(() -> client.recieveLeft()).start();
                 }
                 textBoxContent = "";
                 Gamestate.state = Gamestate.LOBBY;
-            
+
             }
 
             if (goBackHover) {
@@ -114,9 +113,9 @@ public class Join {
 
     private boolean checkHover(int buttonY) {
         return mouseHandler.getMouseX() >= buttonX &&
-               mouseHandler.getMouseX() <= buttonX + buttonWidth &&
-               mouseHandler.getMouseY() >= buttonY &&
-               mouseHandler.getMouseY() <= buttonY + buttonHeight;
+                mouseHandler.getMouseX() <= buttonX + buttonWidth &&
+                mouseHandler.getMouseY() >= buttonY &&
+                mouseHandler.getMouseY() <= buttonY + buttonHeight;
     }
 
     private void drawButton(GraphicsContext gc, int buttonY, boolean hover, String text) {
