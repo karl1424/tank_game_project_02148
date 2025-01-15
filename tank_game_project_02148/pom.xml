@@ -50,7 +50,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>dk.dtu.Main</mainClass>
+                            <mainClass>dk.dtu.main.Main</mainClass>
                         </configuration>
                     </execution>
                 </executions>
