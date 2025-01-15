@@ -25,6 +25,8 @@ public class Client {
 
     private boolean startPos = true;
 
+    public boolean winner = false;
+
     private int port, lobbyID;
     private String host;
 
@@ -38,7 +40,7 @@ public class Client {
 
         this.port = 31145;
         this.host = ge.IP;
-        this.lobbyID = 0;
+        //this.lobbyID = 0;
 
         // Offline/Online testing:
         if (!ge.online) {
@@ -48,8 +50,12 @@ public class Client {
             startPos = true;
         }
 
-        playername = ge.isHost ? "player1" : "player2";
         opponentImage = new Image("file:res/tank2.png");
+    }
+
+    public void setPlayerNames() {
+        
+        playername = ge.isHost ? "player1" : "player2";
 
         createPlayer();
 
@@ -63,6 +69,7 @@ public class Client {
             opponentStartPosY = player.p1Y;
             opponentStartAngle = player.p1Angle;
         }
+        
     }
 
     public void connectToServerHost() {
@@ -73,7 +80,7 @@ public class Client {
                     String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
                     server = new RemoteSpace(uri);
                     server.put("host");
-                    Object [] lobby = server.get(new ActualField ("lobby"), new FormalField(Integer.class));
+                    Object[] lobby = server.get(new ActualField("lobby"), new FormalField(Integer.class));
                     lobbyID = (int) lobby[1];
                 } catch (Exception e) {
                     System.out.println(e);
@@ -85,6 +92,7 @@ public class Client {
     public void connectToServer() {
         // Connect to lobby
         if (ge.online) {
+            System.out.println(lobbyID);
             try {
                 String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID + "player1" + "?conn";
                 String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
@@ -109,12 +117,16 @@ public class Client {
         return player;
     }
 
-    public void sendCoordinate() throws InterruptedException {
+    public void sendCoordinate() {
         if (player.getShot()) {
             player.shot = false;
             spawnProjectile(player.getX(), player.getY(), player.getAngle(), 0);
             if (ge.online) {
-                lobbyShots.put(playername);
+                try {
+                    lobbyShots.put(playername);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -164,19 +176,26 @@ public class Client {
             }
         }
     }
-    
-    public void sendGameOver() throws InterruptedException {
-            System.out.println("sending Game Over");
-            lobbyShots.put("Game Over",ge.isHost ? "player1" : "player2");
+
+    public void sendGameOver() {
+        System.out.println("sending Game Over");
+        try {
+            lobbyShots.put("Game Over", ge.isHost ? "player1" : "player2");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void recieveGameOver() {
         while (true) {
             try {
                 System.out.println("Looking for Game Over");
-                lobbyShots.get(new ActualField("Game Over"), ge.isHost ? new ActualField("player2") : new ActualField("player1"));
-                System.out.println("Game Over");          
-                ge.gameOverScreen();
+                lobbyShots.get(new ActualField("Game Over"),
+                        ge.isHost ? new ActualField("player2") : new ActualField("player1"));
+                winner = true;
+                Gamestate.state = Gamestate.GAMEOVER;
+                System.out.println("Game Over");
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -191,16 +210,15 @@ public class Client {
         projectileList.add(new Projectile(ge, projectileX, projectileY, angle, numberOfHits));
     }
 
-
-    public void drawOpponent(GraphicsContext gc) throws InterruptedException {
+    public void drawOpponent(GraphicsContext gc) {
         if (projectileList != null) {
             if (projectileList.size() != 0) {
                 for (int i = 0; i < projectileList.size(); i++) {
                     projectileList.get(i).repaint(gc);
                     projectileList.get(i).update(player.getHitbox(), ge.grid.getGrid());
-                    //if (!projectileList.get(i).isActive()) {
-                      //  projectileList.remove(i);
-                    //}
+                    // if (!projectileList.get(i).isActive()) {
+                    // projectileList.remove(i);
+                    // }
                 }
             }
         }
@@ -236,5 +254,13 @@ public class Client {
         }
 
     }
-  
+
+    public int getLobbyID() {
+        return lobbyID;
+    }
+
+    public void setLobbyID(int lobbyID) {
+        this.lobbyID = lobbyID;
+    }
+
 }

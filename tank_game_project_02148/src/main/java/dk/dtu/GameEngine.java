@@ -6,9 +6,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
-    public boolean isHost = true;
+    public boolean isHost = false;
     public boolean online = true;
-    public String IP = "10.209.242.14";
+    public String IP = "localhost";
 
     private final int rows = 36;
     private final int cols = 46;
@@ -26,6 +26,9 @@ public class GameEngine extends Pane implements Runnable {
 
     public Client client;
     private Menu menu;
+    private GameOver gameOver;
+    private Lobby lobby;
+    private Join join;
 
     public long projectileLifespan = 9000;
 
@@ -45,10 +48,15 @@ public class GameEngine extends Pane implements Runnable {
         this.setOnKeyPressed(inputHandler);
         this.setOnKeyReleased(inputHandler);
 
+        this.setOnKeyTyped(event -> join.handleInput(event));
+
         this.getChildren().add(canvas);
 
         client = new Client(this, inputHandler);
         menu = new Menu(this, mouseHandler, client);
+        lobby = new Lobby(this, mouseHandler, client);
+        join = new Join(this, mouseHandler, client);
+        gameOver = new GameOver(this, inputHandler, client);
         grid = new Grid(this);
 
         // client.connectToServerHost();
@@ -78,20 +86,8 @@ public class GameEngine extends Pane implements Runnable {
             lastTime = currentTime;
 
             if (delta >= 1) {
-
-                new Thread(() -> {
-                    try {
-                        update();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
-
-                try {
-                    repaint(gc);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                update();
+                repaint(gc);
                 delta--;
                 drawCount++;
             }
@@ -104,10 +100,16 @@ public class GameEngine extends Pane implements Runnable {
         }
     }
 
-    private void update() throws InterruptedException {
+    private void update() {
         switch (Gamestate.state) {
             case MENU:
                 menu.update();
+                break;
+            case LOBBY:
+                lobby.update();
+                break;
+            case JOIN:
+                join.update();
                 break;
             case PLAYING:
                 client.getPlayer().update();
@@ -117,19 +119,30 @@ public class GameEngine extends Pane implements Runnable {
                 }
                 break;
             case GAMEOVER:
+                gameOver.update();
                 break;
             default:
                 break;
         }
     }
 
-    private void repaint(GraphicsContext gc) throws InterruptedException {
+    private void repaint(GraphicsContext gc) {
         switch (Gamestate.state) {
             case MENU:
                 gc.setFill(Color.LIGHTGRAY);
                 gc.fillRect(0, 0, screenWidth, screenHeight);
                 this.getChildren().removeAll();
                 menu.draw(gc);
+                break;
+            case LOBBY:
+                gc.setFill(Color.LIGHTGRAY);
+                gc.fillRect(0, 0, screenWidth, screenHeight);
+                lobby.draw(gc);
+                break;
+            case JOIN:
+                gc.setFill(Color.LIGHTGRAY);
+                gc.fillRect(0, 0, screenWidth, screenHeight);
+                join.draw(gc);
                 break;
             case PLAYING:
                 gc.setFill(Color.LIGHTGRAY);
@@ -140,10 +153,7 @@ public class GameEngine extends Pane implements Runnable {
                 client.drawOpponent(gc);
                 break;
             case GAMEOVER:
-                gc.setFill(Color.LIGHTGRAY);
-                gc.fillRect(0, 0, screenWidth, screenHeight);
-                this.getChildren().removeAll();
-                menu.draw(gc);
+                gameOver.draw(gc);
                 break;
             default:
                 break;
@@ -157,15 +167,9 @@ public class GameEngine extends Pane implements Runnable {
 
     }
 
-    public void stopGame() throws InterruptedException {
+    public void stopGame() {
         client.sendGameOver();
         Gamestate.state = Gamestate.GAMEOVER;
-        repaint(gc);
-    }
-
-    public void gameOverScreen() throws InterruptedException {
-        Gamestate.state = Gamestate.GAMEOVER;
-        repaint(gc);
     }
 
 }

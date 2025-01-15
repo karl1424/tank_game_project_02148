@@ -92,7 +92,7 @@ public class Player {
         if (inputHandler.shootPressed && canShoot) {
             canShoot = false;
             shot = true;
-            startCooldown();
+            new Thread(() -> startCooldown()).start();
             // Start a timer to reset canShoot;
         }
 
@@ -119,27 +119,6 @@ public class Player {
         int startY = (int) ((hitbox.getCenterY() - ge.tileSize) / ge.tileSize - 2);
         int endX = (int) ((hitbox.getCenterX() + ge.tileSize) / ge.tileSize + 2);
         int endY = (int) ((hitbox.getCenterY() + ge.tileSize) / ge.tileSize + 2);
-
-        // System.out.println(startX + ", " + startY + ", " + endX + ", " + endY);
-
-        /*
-         * for (int i = startX; i <= endX; i++) {
-         * for (int j = startY; j <= endY; j++) {
-         * if (i < 0 || i >= 46 || j < 0 || j >= 36) {
-         * continue;
-         * }
-         * if (grid[j][i] != null) {
-         * //System.out.println(i + ", " + j);
-         * Shape tileShape = (Shape) grid[j][i];
-         * Shape intersection = Shape.intersect(hitboxShape, tileShape);
-         * 
-         * if (intersection.getBoundsInLocal().getWidth() != -1) {
-         * return true;
-         * }
-         * }
-         * }
-         * }
-         */
 
         for (int i = startX; i <= endX; i++) {
             for (int j = startY; j <= endY; j++) {

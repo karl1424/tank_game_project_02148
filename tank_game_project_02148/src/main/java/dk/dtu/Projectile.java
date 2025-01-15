@@ -38,7 +38,7 @@ public class Projectile {
         this.projectileHitbox = new Rectangle(x - 4, y - 4, 8, 8);
     }
 
-    public void update(Circle tankHitbox, Rectangle[][] grid) throws InterruptedException {
+    public void update(Circle tankHitbox, Rectangle[][] grid) {
         if (!isActive) {
             return;
         }
@@ -146,38 +146,9 @@ public class Projectile {
             numberOfHits++;
         }
 
-        /*
-         * if (gridY >= 0 && gridY < grid.length && gridX - 1 >= 0 && gridX + 1 <
-         * grid[gridY].length) {
-         * if (grid[gridY][gridX - 1] != null || grid[gridY][gridX + 1] != null) {
-         * hitVerticalWall = true;
-         * }
-         * }
-         * 
-         * if (gridY >= 0 && gridY < grid.length && gridX >= 0 && gridX <
-         * grid[gridY].length) {
-         * if (grid[gridY - 1][gridX] != null || grid[gridY + 1][gridX] != null) {
-         * hitHorizontalWall = true;
-         * }
-         * }
-         * 
-         * if (gridX < 0 || gridX >= grid[0].length || gridY < 0 || gridY >=
-         * grid.length) {
-         * isActive = false;
-         * return;
-         * }
-         */
-
-        // Handle corner collisions (both vertical and horizontal)
-
     }
 
     private void updateAngle() {
-        /*
-         * if (hitVerticalWall && hitHorizontalWall) {
-         * angle = (angle + 180) % 360; // Reverse completely
-         * } else
-         */
         if (hitVerticalWall) {
             angle = 180 - angle;
         } else if (hitHorizontalWall) {

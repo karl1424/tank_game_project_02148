@@ -41,52 +41,41 @@ public class Menu {
         quitHover = checkHover(quitButtonY);
 
         if (hostHover && mouseHandler.isClicked()) {
+            ge.isHost = true;
+            client.setPlayerNames();
             client.connectToServerHost();
             client.connectToServer();
-            if (ge.online) {
-                new Thread(() -> {
-                    client.recieveShots();
-                }).start();
-            }
-            if (ge.online) {
-                new Thread(() -> {
-                    client.recieveGameOver();
-                }).start();
-            }
-            Gamestate.state = Gamestate.PLAYING;
+            /*
+             * client.connectToServer();
+             * if (ge.online) {
+             * new Thread(() -> {
+             * client.recieveShots();
+             * }).start();
+             * }
+             * if (ge.online) {
+             * new Thread(() -> {
+             * client.recieveGameOver();
+             * }).start();
+             * }
+             */
+            Gamestate.state = Gamestate.LOBBY;
         }
 
         if (joinHover && mouseHandler.isClicked()) {
-            client.connectToServer();
-            if (ge.online) {
-                new Thread(() -> {
-                    client.recieveShots();
-                }).start();
-            }
-            if (ge.online) {
-                new Thread(() -> {
-                    client.recieveGameOver();
-                }).start();
-            }
-            Gamestate.state = Gamestate.PLAYING;
-            mouseHandler.mouseReleased = false;
+            Gamestate.state = Gamestate.JOIN;
         }
 
         if (quitHover && mouseHandler.isClicked()) {
             System.exit(0);
-            mouseHandler.mouseReleased = false;
         }
 
     }
 
     private boolean checkHover(int buttonY) {
-        if (mouseHandler.mouseX >= buttonX
+        return mouseHandler.mouseX >= buttonX
                 && mouseHandler.mouseX <= buttonX + buttonWidth
                 && mouseHandler.mouseY >= buttonY
-                && mouseHandler.mouseY <= buttonY + buttonHeight) {
-            return true;
-        }
-        return false;
+                && mouseHandler.mouseY <= buttonY + buttonHeight;
     }
 
     public void draw(GraphicsContext gc) {
