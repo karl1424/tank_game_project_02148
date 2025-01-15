@@ -177,6 +177,29 @@ public class Client {
         }
     }
 
+    public void sendStart() {
+        try {
+            lobbyShots.put("Game Start",ge.isHost ? "player1" : "player2");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void recieveGameStart() {
+        while (true) {
+            try {
+                System.out.println("Looking for Game Start");
+                lobbyShots.get(new ActualField("Game Start"),
+                        ge.isHost ? new ActualField("player2") : new ActualField("player1"));
+                Gamestate.state = Gamestate.PLAYING;
+                System.out.println("Game Start");
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void sendGameOver() {
         System.out.println("sending Game Over");
         try {
@@ -185,6 +208,7 @@ public class Client {
             e.printStackTrace();
         }
     }
+
 
     public void recieveGameOver() {
         while (true) {

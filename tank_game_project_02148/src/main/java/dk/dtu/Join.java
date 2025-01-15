@@ -67,6 +67,7 @@ public class Join {
                 if (ge.online) {
                     client.connectToServer();
                 }
+                new Thread(() -> client.recieveGameStart()).start();
                 textBoxContent = "";
                 if (ge.online) {
                     new Thread(() -> {
@@ -74,11 +75,9 @@ public class Join {
                     }).start();
                 }
                 if (ge.online) {
-                    new Thread(() -> {
-                        client.recieveGameOver();
-                    }).start();
+                    new Thread(() -> client.recieveGameOver()).start();
                 }
-                Gamestate.state = Gamestate.PLAYING;
+                Gamestate.state = Gamestate.LOBBY;
             }
 
             if (goBackHover) {

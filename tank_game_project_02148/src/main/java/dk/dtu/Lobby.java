@@ -32,6 +32,9 @@ public class Lobby {
     }
 
     public void update() {
+        if (!ge.isHost) {
+            return;
+        }
         startHover = checkHover(startButtonY);
         goBackHover = checkHover(goBackButtonY);
 
@@ -47,6 +50,7 @@ public class Lobby {
                         client.recieveGameOver();
                     }).start();
                 }
+                client.sendStart();
                 Gamestate.state = Gamestate.PLAYING;
             } else if (goBackHover) {
                 // RESET LOBBY!!!

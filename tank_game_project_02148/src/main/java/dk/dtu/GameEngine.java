@@ -56,7 +56,7 @@ public class GameEngine extends Pane implements Runnable {
         menu = new Menu(this, mouseHandler, client);
         lobby = new Lobby(this, mouseHandler, client);
         join = new Join(this, mouseHandler, client);
-        gameOver = new GameOver(this, inputHandler, client);
+        gameOver = new GameOver(this, mouseHandler, client);
         grid = new Grid(this);
 
         // client.connectToServerHost();
@@ -171,5 +171,6 @@ public class GameEngine extends Pane implements Runnable {
         client.sendGameOver();
         Gamestate.state = Gamestate.GAMEOVER;
     }
+
 
 }
