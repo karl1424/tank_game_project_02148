@@ -16,7 +16,8 @@ public class Client {
     private GameEngine ge;
     private InputHandler inputHandler;
 
-    private Space server, lobbySend, lobbyGet, lobbyShots;
+    private Space server, lobbySend, lobbyGet;
+    public Space lobbyShots;
 
     private String playername;
 
@@ -49,13 +50,17 @@ public class Client {
         } else {
             startPos = true;
         }
-
-        opponentImage = new Image("file:res/tank2.png");
     }
 
     public void setPlayerNames() {
         
-        playername = ge.isHost ? "player1" : "player2";
+        if (ge.isHost) {
+            playername = "player1";
+            opponentImage = new Image("file:res/tank2.png");
+        } else {
+            playername = "player2";
+            opponentImage = new Image("file:res/tank1.png");
+        }
 
         createPlayer();
 
@@ -118,6 +123,7 @@ public class Client {
     }
 
     public void sendCoordinate() {
+        
         if (player.getShot()) {
             player.shot = false;
             spawnProjectile(player.getX(), player.getY(), player.getAngle(), 0);
@@ -246,6 +252,14 @@ public class Client {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void closeLobby(){
+        try {
+            lobbyShots.put("Game Over","lobbyclose");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

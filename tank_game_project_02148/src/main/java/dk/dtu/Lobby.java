@@ -1,5 +1,7 @@
 package dk.dtu;
 
+import org.jspace.ActualField;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -53,6 +55,20 @@ public class Lobby {
                 if (ge.isHost) {
                     client.sendLeft();
                 }
+                Gamestate.state = Gamestate.PLAYING;
+            } else if (goBackHover) {
+                // RESET LOBBY!!!
+                if (ge.isHost) {
+                    client.closeLobby();
+                } else {
+                    try {
+                        client.lobbyShots.get(new ActualField("occupied"));
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
+
+                ge.isHost = false;
                 Gamestate.state = Gamestate.MENU;
             }
         }

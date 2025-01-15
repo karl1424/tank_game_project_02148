@@ -54,7 +54,7 @@ public class Player {
     }
 
     private void init() {
-        playerImage = new Image("file:res/tank1.png");
+        playerImage = playerName == "player1" ? new Image("file:res/tank1.png") : new Image("file:res/tank2.png");
         hitbox = new Circle(x + ge.tileSize, y + ge.tileSize, ge.tileSize - 2);
         hitbox.setFill(Color.TRANSPARENT);
         hitbox.setStroke(Color.RED);

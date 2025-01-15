@@ -1,5 +1,7 @@
 package dk.dtu;
 
+import org.jspace.ActualField;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -65,12 +67,25 @@ public class Join {
                 client.setLobbyID(Integer.parseInt(textBoxContent));
                 
                 if (ge.online) {
+                    try {
+                        Object [] occupied = client.lobbyShots.query(new ActualField("occupied"));
+                        if (occupied == null){
+                            client.lobbyShots.put("occupied");
+                            client.connectToServer();
+                        } else {
+                            System.out.println("Lobby is full");
+                        }
+                        
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     client.connectToServer();
                     new Thread(() -> client.recieveGameStart()).start();
                     new Thread(() -> client.recieveLeft()).start();
                 }
                 textBoxContent = "";
                 Gamestate.state = Gamestate.LOBBY;
+            
             }
 
             if (goBackHover) {
