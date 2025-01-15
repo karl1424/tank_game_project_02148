@@ -1,4 +1,6 @@
 package dk.dtu;
+import java.io.IOException;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -68,7 +70,15 @@ public class Join {
                     Object[] occupied = client.queryOccupied();
                     if (occupied == null) {
                         client.putOccupied();
-                        client.connectToServer();
+
+                        try {
+                            client.connectToServer();
+                        } catch (InterruptedException | IOException e) {
+                            System.out.println("NOT A LOBBY ID");
+                            textBoxContent = "";
+                            return;
+                        }
+
                         new Thread(() -> client.recieveGameStart()).start();
                         new Thread(() -> client.recieveLeft()).start();
                         Gamestate.state = Gamestate.LOBBY;

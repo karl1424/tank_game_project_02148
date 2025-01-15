@@ -1,6 +1,7 @@
 package dk.dtu;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import org.jspace.ActualField;
@@ -98,18 +99,16 @@ public class Client {
         }
     }
 
-    public void connectToServer() {
+    public void connectToServer() throws InterruptedException, UnknownHostException, IOException {
         // Connect to lobby
         if (ge.online) {
             System.out.println(lobbyID);
-            try {
-                String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID + "player1" + "?conn";
-                String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
-                lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
-                lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
-            } catch (Exception e) {
-                System.out.println("Lobby does not exist!");
-            }
+            String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID + "player1" + "?conn";
+            String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
+            lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
+            lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
+            lobbySend.put("Connected");
+            lobbySend.get(new ActualField("Connected"));
         }
     }
 

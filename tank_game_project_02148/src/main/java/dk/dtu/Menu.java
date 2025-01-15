@@ -1,5 +1,7 @@
 package dk.dtu;
 
+import java.io.IOException;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -45,7 +47,12 @@ public class Menu {
                 ge.isHost = true;
                 client.setPlayerNames();
                 client.connectToServerHost();
-                client.connectToServer();
+                try {
+                    client.connectToServer();
+                } catch (InterruptedException | IOException e) {
+                    System.out.println("SOMETHING WENT WRONG!");
+                }
+                
                 client.initLobby();
                 Gamestate.state = Gamestate.LOBBY;
             } else if (joinHover) {

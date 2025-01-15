@@ -73,6 +73,7 @@ public class Projectile {
 
         if (numberOfHits > 0) {
             if (projectileHitbox.intersects(tankHitbox.getBoundsInLocal())) {
+                creationTime = ge.projectileLifespan;
                 isActive = false;
                 ge.stopGame();
             }
@@ -115,23 +116,6 @@ public class Projectile {
                         maxHeight = maxHeight < height ? height : maxHeight;
                         maxWidth = maxWidth < width ? width : maxWidth;
                     }
-
-                    /*
-                     * if (intersection.getBoundsInLocal().getWidth() != -1) {
-                     * if (intersection.getBoundsInParent().getWidth() <
-                     * intersection.getBoundsInParent()
-                     * .getHeight()) {
-                     * hitVerticalWall = true;
-                     * } else if (intersection.getBoundsInParent().getWidth() >
-                     * intersection.getBoundsInParent()
-                     * .getHeight()) {
-                     * hitHorizontalWall = true;
-                     * } else {
-                     * hitHorizontalWall = true;
-                     * hitVerticalWall = true;
-                     * }
-                     * }
-                     */
 
                 }
             }
