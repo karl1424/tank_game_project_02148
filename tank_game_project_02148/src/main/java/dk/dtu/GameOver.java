@@ -34,6 +34,7 @@ public class GameOver {
 
         if(mouseHandler.wasMouseClicked()) {
             if(goBackHover) {
+                ge.isHost = false;
                 Gamestate.state = Gamestate.MENU;
             }
         }

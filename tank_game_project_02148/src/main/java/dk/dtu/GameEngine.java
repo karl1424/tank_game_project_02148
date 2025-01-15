@@ -6,9 +6,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
-    public boolean isHost = true;
+    public boolean isHost = false;
     public boolean online = true;
-    public String IP = "localhost";
+    public String IP = "10.209.203.75";
 
     private final int rows = 36;
     private final int cols = 46;

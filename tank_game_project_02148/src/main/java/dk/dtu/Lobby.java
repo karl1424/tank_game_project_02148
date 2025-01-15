@@ -32,28 +32,29 @@ public class Lobby {
     }
 
     public void update() {
-        if (!ge.isHost) {
-            return;
+        if (ge.isHost) {
+            startHover = checkHover(startButtonY);
         }
-        startHover = checkHover(startButtonY);
         goBackHover = checkHover(goBackButtonY);
-
+        
         if (mouseHandler.wasMouseClicked()) {
-            if (startHover) {
-                if (ge.online) {
-                    new Thread(() -> {
-                        client.recieveShots();
-                    }).start();
+            if (ge.isHost) {
+                if (startHover) {
+                    if (ge.online) {
+                        new Thread(() -> {
+                            client.recieveShots();
+                        }).start();
+                    }
+                    if (ge.online) {
+                        new Thread(() -> {
+                            client.recieveGameOver();
+                        }).start();
+                    }
+                    client.sendStart();
+                    Gamestate.state = Gamestate.PLAYING;
                 }
-                if (ge.online) {
-                    new Thread(() -> {
-                        client.recieveGameOver();
-                    }).start();
-                }
-                client.sendStart();
-                Gamestate.state = Gamestate.PLAYING;
             } else if (goBackHover) {
-                // RESET LOBBY!!!
+                ge.isHost = false;
                 Gamestate.state = Gamestate.MENU;
             }
         }
