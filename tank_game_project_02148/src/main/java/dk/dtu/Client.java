@@ -191,9 +191,32 @@ public class Client {
                 System.out.println("Looking for Game Start");
                 lobbyShots.get(new ActualField("Game Start"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
+                new Thread(() -> recieveShots()).start();
+                new Thread(() -> recieveGameOver()).start();
                 Gamestate.state = Gamestate.PLAYING;
                 System.out.println("Game Start");
 
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendLeft() {
+        try {
+            lobbyShots.put("Left",ge.isHost ? "player1" : "player2");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void recieveLeft() {
+        while (true) {
+            try {
+                lobbyShots.get(new ActualField("Left"),
+                        ge.isHost ? new ActualField("player2") : new ActualField("player1"));
+                Gamestate.state = Gamestate.PLAYING;
+                System.out.println("Left");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

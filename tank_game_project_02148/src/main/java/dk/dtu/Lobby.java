@@ -36,25 +36,23 @@ public class Lobby {
             startHover = checkHover(startButtonY);
         }
         goBackHover = checkHover(goBackButtonY);
-        
+
         if (mouseHandler.wasMouseClicked()) {
             if (ge.isHost) {
                 if (startHover) {
                     if (ge.online) {
-                        new Thread(() -> {
-                            client.recieveShots();
-                        }).start();
-                    }
-                    if (ge.online) {
-                        new Thread(() -> {
-                            client.recieveGameOver();
-                        }).start();
+                        new Thread(() -> client.recieveShots()).start();
+                        new Thread(() -> client.recieveGameOver()).start();
                     }
                     client.sendStart();
                     Gamestate.state = Gamestate.PLAYING;
                 }
-            } else if (goBackHover) {
+            }
+            if (goBackHover) {
                 ge.isHost = false;
+                if (ge.isHost) {
+                    client.sendLeft();
+                }
                 Gamestate.state = Gamestate.MENU;
             }
         }
