@@ -1,7 +1,4 @@
 package dk.dtu;
-
-import org.jspace.ActualField;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;

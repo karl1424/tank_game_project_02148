@@ -55,7 +55,7 @@ class lobbyHandeler implements Runnable {
         try {
             Space lobbyShots = new RemoteSpace(uri);
             lobbyShots.query(new ActualField("Game Over"), new FormalField(String.class));
-            Thread.sleep(10000);
+            Thread.sleep(1000);
             serverSpace.remove(lobbyID + "player1");
             serverSpace.remove(lobbyID + "player2");
             serverSpace.remove(lobbyID + "shots");
