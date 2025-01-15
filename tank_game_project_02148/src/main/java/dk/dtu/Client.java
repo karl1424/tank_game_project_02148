@@ -18,14 +18,14 @@ public class Client {
     private InputHandler inputHandler;
 
     private Space server, lobbySend, lobbyGet, lobbyShots;;
-    
 
     private String playername;
 
     private int prevX, prevY, prevAngle, opponentPrevX, opponentPrevY, opponentPrevAngle;
     private int opponentStartPosX, opponentStartPosY, opponentStartAngle;
 
-    private boolean startPos = true;
+    public boolean startPos = true;
+    public boolean startGame;
 
     public boolean winner = false;
 
@@ -42,19 +42,12 @@ public class Client {
 
         this.port = 31145;
         this.host = ge.IP;
-        //this.lobbyID = 0;
+        // this.lobbyID = 0;
 
-        // Offline/Online testing:
-        if (!ge.online) {
-            ge.isHost = true;
-            startPos = false;
-        } else {
-            startPos = true;
-        }
     }
 
     public void setPlayerNames() {
-        
+
         if (ge.isHost) {
             playername = "player1";
             opponentImage = new Image("file:res/tank2.png");
@@ -75,7 +68,7 @@ public class Client {
             opponentStartPosY = player.p1Y;
             opponentStartAngle = player.p1Angle;
         }
-        
+
     }
 
     public void connectToServerHost() {
@@ -115,7 +108,7 @@ public class Client {
                 lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
                 lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
             } catch (Exception e) {
-                System.out.println(e);
+                System.out.println("Lobby does not exist!");
             }
         }
     }
@@ -132,7 +125,7 @@ public class Client {
     }
 
     public void sendCoordinate() {
-        
+
         if (player.getShot()) {
             player.shot = false;
             spawnProjectile(player.getX(), player.getY(), player.getAngle(), 0);
@@ -194,7 +187,7 @@ public class Client {
 
     public void sendStart() {
         try {
-            lobbyShots.put("Game Start",ge.isHost ? "player1" : "player2");
+            lobbyShots.put("Game Start", ge.isHost ? "player1" : "player2");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -208,6 +201,8 @@ public class Client {
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
                 new Thread(() -> recieveShots()).start();
                 new Thread(() -> recieveGameOver()).start();
+                startPos = true;
+                startGame = true;
                 Gamestate.state = Gamestate.PLAYING;
                 System.out.println("Game Start");
 
@@ -219,7 +214,7 @@ public class Client {
 
     public void sendLeft() {
         try {
-            lobbyShots.put("Left",ge.isHost ? "player1" : "player2");
+            lobbyShots.put("Left", ge.isHost ? "player1" : "player2");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -247,7 +242,6 @@ public class Client {
         }
     }
 
-
     public void recieveGameOver() {
         while (true) {
             try {
@@ -264,9 +258,9 @@ public class Client {
         }
     }
 
-    public void closeLobby(){
+    public void closeLobby() {
         try {
-            lobbyShots.put("Game Over","lobbyclose");
+            lobbyShots.put("Game Over", "lobbyclose");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -281,7 +275,7 @@ public class Client {
     }
 
     public Object[] queryOccupied() {
-        Object [] query = null;
+        Object[] query = null;
         try {
             query = lobbyShots.queryp(new ActualField("occupied"));
         } catch (InterruptedException e) {
@@ -319,7 +313,7 @@ public class Client {
             }
         }
 
-        if (coordinates != null) {
+        if (coordinates != null && !startGame) {
             startPos = false;
             gc.save();
             gc.translate((double) (int) coordinates[1] + ge.tileSize, (double) (int) coordinates[2] + ge.tileSize);
@@ -340,15 +334,14 @@ public class Client {
                 // Draw player 2 in correct starting possition;
                 gc.translate(opponentStartPosX + ge.tileSize, opponentStartPosY + ge.tileSize);
                 gc.rotate(opponentStartAngle);
+                startGame = false;
             }
 
             gc.setFill(Color.BLUE);
             gc.drawImage(opponentImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
 
             gc.restore();
-
         }
-
     }
 
     public int getLobbyID() {

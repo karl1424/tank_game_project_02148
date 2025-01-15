@@ -46,8 +46,11 @@ public class Lobby {
                         new Thread(() -> client.recieveShots()).start();
                         new Thread(() -> client.recieveGameOver()).start();
                     }
+                    client.startPos = true;
+                    client.startGame = true;
                     client.sendStart();
                     Gamestate.state = Gamestate.PLAYING;
+                    
                 }
             }
             if (goBackHover) {

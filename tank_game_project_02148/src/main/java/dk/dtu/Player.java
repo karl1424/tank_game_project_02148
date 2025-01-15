@@ -45,7 +45,7 @@ public class Player {
         } else {
             x = p2X;
             y = p2Y;
-            angle = p1Angle;
+            angle = p2Angle;
         }
         this.previousX = x;
         this.previousY = y;
