@@ -17,8 +17,8 @@ public class Client {
     private GameEngine ge;
     private InputHandler inputHandler;
 
-    private Space server, lobbySend, lobbyGet;
-    public Space lobbyShots;
+    private Space server, lobbySend, lobbyGet, lobbyShots;;
+    
 
     private String playername;
 
@@ -82,6 +82,7 @@ public class Client {
         if (ge.online) {
             // Connect to server
             if (ge.isHost) {
+                System.out.println("Attempting to create lobby");
                 try {
                     String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
                     server = new RemoteSpace(uri);
@@ -229,7 +230,7 @@ public class Client {
             try {
                 lobbyShots.get(new ActualField("Left"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
-                Gamestate.state = Gamestate.PLAYING;
+                Gamestate.state = Gamestate.MENU;
                 System.out.println("Left");
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -266,6 +267,32 @@ public class Client {
     public void closeLobby(){
         try {
             lobbyShots.put("Game Over","lobbyclose");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getOccupied() {
+        try {
+            lobbyShots.get(new ActualField("occupied"));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Object[] queryOccupied() {
+        Object [] query = null;
+        try {
+            query = lobbyShots.queryp(new ActualField("occupied"));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return query;
+    }
+
+    public void putOccupied() {
+        try {
+            lobbyShots.put("occupied");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

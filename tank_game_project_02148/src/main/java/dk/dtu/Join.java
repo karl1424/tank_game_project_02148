@@ -68,19 +68,15 @@ public class Join {
 
                 if (ge.online) {
                     client.initLobby();
-                    try {
-                        Object[] occupied = client.lobbyShots.queryp(new ActualField("occupied"));
-                        if (occupied == null) {
-                            client.lobbyShots.put("occupied");
-                            client.connectToServer();
-                            new Thread(() -> client.recieveGameStart()).start();
-                            new Thread(() -> client.recieveLeft()).start();
-                            Gamestate.state = Gamestate.LOBBY;
-                        } else {
-                            System.out.println("Lobby is full");
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    Object[] occupied = client.queryOccupied();
+                    if (occupied == null) {
+                        client.putOccupied();
+                        client.connectToServer();
+                        new Thread(() -> client.recieveGameStart()).start();
+                        new Thread(() -> client.recieveLeft()).start();
+                        Gamestate.state = Gamestate.LOBBY;
+                    } else {
+                        System.out.println("Lobby is full");
                     }
 
                 }

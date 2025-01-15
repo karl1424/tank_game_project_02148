@@ -57,7 +57,7 @@ public class Lobby {
                     client.closeLobby();
                 } else {
                     try {
-                        client.lobbyShots.get(new ActualField("occupied"));
+                        client.getOccupied();
                     } catch (Exception e) {
                         System.out.println(e);
                     }

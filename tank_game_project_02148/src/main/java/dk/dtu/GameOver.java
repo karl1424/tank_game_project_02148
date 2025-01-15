@@ -45,9 +45,9 @@ public class GameOver {
     public void draw(GraphicsContext gc) {
 
         gc.setFill(Color.DIMGRAY);
-        gc.setGlobalAlpha(0.5);
+        gc.setGlobalAlpha(0.3);
 
-        // gc.fillRect(0, 0, ge.screenWidth, ge.screenHeight);
+        gc.fillRect(0, 0, ge.screenWidth, ge.screenHeight);
 
         gc.setGlobalAlpha(1.0);
 
