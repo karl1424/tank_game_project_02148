@@ -40,42 +40,27 @@ public class Menu {
         joinHover = checkHover(joinButtonY);
         quitHover = checkHover(quitButtonY);
 
-        if (hostHover && mouseHandler.isClicked()) {
-            ge.isHost = true;
-            client.setPlayerNames();
-            client.connectToServerHost();
-            client.connectToServer();
-            /*
-             * client.connectToServer();
-             * if (ge.online) {
-             * new Thread(() -> {
-             * client.recieveShots();
-             * }).start();
-             * }
-             * if (ge.online) {
-             * new Thread(() -> {
-             * client.recieveGameOver();
-             * }).start();
-             * }
-             */
-            Gamestate.state = Gamestate.LOBBY;
-        }
-
-        if (joinHover && mouseHandler.isClicked()) {
-            Gamestate.state = Gamestate.JOIN;
-        }
-
-        if (quitHover && mouseHandler.isClicked()) {
-            System.exit(0);
+        if (mouseHandler.wasMouseClicked()) {
+            if (hostHover) {
+                ge.isHost = true;
+                client.setPlayerNames();
+                client.connectToServerHost();
+                client.connectToServer();
+                Gamestate.state = Gamestate.LOBBY;
+            } else if (joinHover) {
+                Gamestate.state = Gamestate.JOIN;
+            } else if (quitHover) {
+                System.exit(0);
+            }
         }
 
     }
 
     private boolean checkHover(int buttonY) {
-        return mouseHandler.mouseX >= buttonX
-                && mouseHandler.mouseX <= buttonX + buttonWidth
-                && mouseHandler.mouseY >= buttonY
-                && mouseHandler.mouseY <= buttonY + buttonHeight;
+        return mouseHandler.getMouseX() >= buttonX
+                && mouseHandler.getMouseX() <= buttonX + buttonWidth
+                && mouseHandler.getMouseY() >= buttonY
+                && mouseHandler.getMouseY() <= buttonY + buttonHeight;
     }
 
     public void draw(GraphicsContext gc) {

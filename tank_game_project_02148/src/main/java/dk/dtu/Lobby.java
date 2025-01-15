@@ -35,23 +35,23 @@ public class Lobby {
         startHover = checkHover(startButtonY);
         goBackHover = checkHover(goBackButtonY);
 
-        if (startHover && mouseHandler.isClicked()) {
-            if (ge.online) {
-                new Thread(() -> {
-                    client.recieveShots();
-                }).start();
+        if (mouseHandler.wasMouseClicked()) {
+            if (startHover) {
+                if (ge.online) {
+                    new Thread(() -> {
+                        client.recieveShots();
+                    }).start();
+                }
+                if (ge.online) {
+                    new Thread(() -> {
+                        client.recieveGameOver();
+                    }).start();
+                }
+                Gamestate.state = Gamestate.PLAYING;
+            } else if (goBackHover) {
+                // RESET LOBBY!!!
+                Gamestate.state = Gamestate.MENU;
             }
-            if (ge.online) {
-                new Thread(() -> {
-                    client.recieveGameOver();
-                }).start();
-            }
-            Gamestate.state = Gamestate.PLAYING;
-        }
-
-        if (goBackHover && mouseHandler.isClicked()) {
-            //RESET LOBBY!!!
-            Gamestate.state = Gamestate.MENU;
         }
     }
 
@@ -59,7 +59,8 @@ public class Lobby {
         gc.setFill(Color.GREEN);
         gc.setFont(new javafx.scene.text.Font("Arial", 50));
 
-        javafx.scene.text.Text tempText = new javafx.scene.text.Text("LOBBY ID: " + (ge.online ? client.getLobbyID() : ""));
+        javafx.scene.text.Text tempText = new javafx.scene.text.Text(
+                "LOBBY ID: " + (ge.online ? client.getLobbyID() : ""));
         tempText.setFont(gc.getFont());
         double textWidth = tempText.getBoundsInLocal().getWidth();
 
@@ -73,10 +74,10 @@ public class Lobby {
     }
 
     private boolean checkHover(int buttonY) {
-        return mouseHandler.mouseX >= buttonX
-                && mouseHandler.mouseX <= buttonX + buttonWidth
-                && mouseHandler.mouseY >= buttonY
-                && mouseHandler.mouseY <= buttonY + buttonHeight;
+        return mouseHandler.getMouseX() >= buttonX
+                && mouseHandler.getMouseX() <= buttonX + buttonWidth
+                && mouseHandler.getMouseY() >= buttonY
+                && mouseHandler.getMouseY() <= buttonY + buttonHeight;
     }
 
     private void drawButton(GraphicsContext gc, int buttonY, boolean hover, String text) {

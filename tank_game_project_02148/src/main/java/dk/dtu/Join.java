@@ -50,11 +50,11 @@ public class Join {
         joinHover = checkHover(joinButtonY);
         goBackHover = checkHover(goBackButtonY);
 
-        if (mouseHandler.isClicked()) {
-            if (mouseHandler.mouseX >= textBoxX &&
-                mouseHandler.mouseX <= textBoxX + textBoxWidth &&
-                mouseHandler.mouseY >= textBoxY &&
-                mouseHandler.mouseY <= textBoxY + textBoxHeight) {
+        if (mouseHandler.wasMouseClicked()) {
+            if (mouseHandler.getMouseX() >= textBoxX &&
+                mouseHandler.getMouseX() <= textBoxX + textBoxWidth &&
+                mouseHandler.getMouseY() >= textBoxY &&
+                mouseHandler.getMouseY() <= textBoxY + textBoxHeight) {
                 textBoxFocused = true;
             } else {
                 textBoxFocused = false;
@@ -106,10 +106,10 @@ public class Join {
     }
 
     private boolean checkHover(int buttonY) {
-        return mouseHandler.mouseX >= buttonX &&
-               mouseHandler.mouseX <= buttonX + buttonWidth &&
-               mouseHandler.mouseY >= buttonY &&
-               mouseHandler.mouseY <= buttonY + buttonHeight;
+        return mouseHandler.getMouseX() >= buttonX &&
+               mouseHandler.getMouseX() <= buttonX + buttonWidth &&
+               mouseHandler.getMouseY() >= buttonY &&
+               mouseHandler.getMouseY() <= buttonY + buttonHeight;
     }
 
     private void drawButton(GraphicsContext gc, int buttonY, boolean hover, String text) {
