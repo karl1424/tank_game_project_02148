@@ -50,44 +50,19 @@ class lobbyHandeler implements Runnable {
         serverSpace.add(lobbyID + "player2", new StackSpace());
         serverSpace.add(lobbyID + "shots", new SequentialSpace());
 
-        Boolean running = true;
+        String uri = "tcp://" + IP + ":" + port + "/" + lobbyID + "shots" + "?conn";
 
-        String uri1 = "tcp://" + IP + ":" + port + "/" + lobbyID + "player1" + "?conn";
-        String uri2 = "tcp://" + IP + ":" + port + "/" + lobbyID + "player2" + "?conn";
-
-        int player1X = 0;
-        int player1Y = 0;
-        int player1Angle = 0;
-        int player2X = 0;
-        int player2Y = 0;
-        int player2Angle = 0;
-        /*
         try {
-            Space lobbyPlayer1 = new RemoteSpace(uri1);
-            Space lobbyPlayer2 = new RemoteSpace(uri2);
-            
-            while (running) {
-                Object[] player1coord = lobbyPlayer1.queryp();
-                Object[] player2coord = lobbyPlayer2.queryp();
-                
-                if (player1X == (int) player1coord[1] && player1Y == (int) player1coord[2]
-                        && player1Angle == (int) player1coord[3]
-                        && player2X == (int) player2coord[1] && player2Y == (int) player2coord[2]
-                        && player2Angle == (int) player2coord[3]) {
-                    serverSpace.remove(lobbyID + "player1");
-                    serverSpace.remove(lobbyID + "player2");
-                    serverSpace.remove(lobbyID + "shots");
-                    running = false;
-                }
-                
-            }
-        } catch (Exception e) {
+            Space lobbyShots = new RemoteSpace(uri);
+            lobbyShots.get(new ActualField("Game Over"), new FormalField(String.class));
             serverSpace.remove(lobbyID + "player1");
             serverSpace.remove(lobbyID + "player2");
             serverSpace.remove(lobbyID + "shots");
-            running = false;
-            System.out.println("Lobby: "+lobbyID+" closed");
+            System.out.println("Closed lobby: "+lobbyID);
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
+        
+       
     }
 }
