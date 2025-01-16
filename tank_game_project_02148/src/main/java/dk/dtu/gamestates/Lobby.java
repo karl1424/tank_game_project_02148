@@ -67,8 +67,6 @@ public class Lobby {
                         System.out.println(e);
                     }
                 }
-                client.recieveStartBool = false;
-                client.recieveLeftBool = false;
                 ge.isHost = false;
                 Gamestate.state = Gamestate.MENU;
             }

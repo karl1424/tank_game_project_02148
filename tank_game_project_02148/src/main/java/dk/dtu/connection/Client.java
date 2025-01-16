@@ -34,8 +34,6 @@ public class Client {
     public boolean startGame;
 
     public boolean winner = false;
-    public boolean recieveStartBool = false;
-    public boolean recieveLeftBool = false;
 
     private int port, lobbyID;
     private String host;
@@ -193,25 +191,29 @@ public class Client {
 
     public void sendStart() {
         try {
-            lobbyShots.put("Game Start", ge.isHost ? "player1" : "player2");
+            lobbyShots.put("Game Start", ge.isHost ? "player1" : "player2", true);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     public void recieveGameStart() {
-        recieveStartBool = true;
-        while (recieveStartBool) {
+        while (true) {
             try {
                 System.out.println("Looking for Game Start");
-                lobbyShots.get(new ActualField("Game Start"),
-                        ge.isHost ? new ActualField("player2") : new ActualField("player1"));
-                new Thread(() -> recieveShots()).start();
-                new Thread(() -> recieveGameOver()).start();
-                startPos = true;
-                startGame = true;
-                Gamestate.state = Gamestate.PLAYING;
-                System.out.println("Game Start");
+                Object[] gameStart = lobbyShots.get(new ActualField("Game Start"),
+                        ge.isHost ? new ActualField("player2") : new ActualField("player1"),
+                        new FormalField(Boolean.class));
+                if ((boolean) gameStart[3]) {
+                    new Thread(() -> recieveShots()).start();
+                    new Thread(() -> recieveGameOver()).start();
+                    startPos = true;
+                    startGame = true;
+                    Gamestate.state = Gamestate.PLAYING;
+                    System.out.println("Game Start");
+                } else {
+                    return;
+                }
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -227,9 +229,16 @@ public class Client {
         }
     }
 
+    public void sendNoGameStart() {
+        try {
+            lobbyShots.put("Game Start", ge.isHost ? "player2" : "player1", false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void recieveLeft() {
-        recieveLeftBool = true;
-        while (recieveLeftBool) {
+        while (true) {
             try {
                 lobbyShots.get(new ActualField("Left"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
