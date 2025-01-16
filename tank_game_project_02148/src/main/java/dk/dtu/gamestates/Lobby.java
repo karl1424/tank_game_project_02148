@@ -61,6 +61,7 @@ public class Lobby {
                     client.sendLeft();
                     client.closeLobby();
                 } else {
+                    client.sendNoGameStart();
                     try {
                         client.getOccupied();
                     } catch (Exception e) {

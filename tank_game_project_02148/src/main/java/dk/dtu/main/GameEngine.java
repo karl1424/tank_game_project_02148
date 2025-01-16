@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
-    public boolean isHost = false;
+    public boolean isHost = false; 
     public boolean online = true;
     public String IP = "10.209.242.14";
 

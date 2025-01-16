@@ -204,7 +204,7 @@ public class Client {
                 Object[] gameStart = lobbyShots.get(new ActualField("Game Start"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"),
                         new FormalField(Boolean.class));
-                if ((boolean) gameStart[3]) {
+                if ((boolean) gameStart[2]) {
                     new Thread(() -> recieveShots()).start();
                     new Thread(() -> recieveGameOver()).start();
                     startPos = true;
