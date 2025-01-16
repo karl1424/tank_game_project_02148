@@ -101,7 +101,6 @@ public class Join {
 
                 }
                 textBoxContent = "";
-                
 
             }
 
@@ -117,7 +116,7 @@ public class Join {
             String character = event.getCharacter();
             if ("\b".equals(character) && textBoxContent.length() > 0) {
                 textBoxContent = textBoxContent.substring(0, textBoxContent.length() - 1);
-            } else if (Character.isLetter(character.charAt(0)) || Character.isDigit(character.charAt(0))) {
+            } else if (Character.isDigit(character.charAt(0))) {
                 textBoxContent += character;
             }
         }
