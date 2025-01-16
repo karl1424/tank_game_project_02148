@@ -13,7 +13,7 @@ public class Server {
     public static Space p4 = new SequentialSpace();
     public static SpaceRepository serverSpace;
     public static RemoteSpace lobbyRequests;
-    final static String IP = "10.209.247.105";
+    final static String IP = "10.209.242.14";
     final static String port = "31145";
     public static int lobbyID;
 

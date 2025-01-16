@@ -105,6 +105,7 @@ public class Join {
             }
 
             if (goBackHover) {
+                errorMessage = "";
                 textBoxContent = "";
                 Gamestate.state = Gamestate.MENU;
             }

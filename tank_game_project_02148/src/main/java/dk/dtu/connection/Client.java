@@ -34,6 +34,8 @@ public class Client {
     public boolean startGame;
 
     public boolean winner = false;
+    public boolean recieveStartBool = false;
+    public boolean recieveLeftBool = false;
 
     private int port, lobbyID;
     private String host;
@@ -198,7 +200,8 @@ public class Client {
     }
 
     public void recieveGameStart() {
-        while (true) {
+        recieveStartBool = true;
+        while (recieveStartBool) {
             try {
                 System.out.println("Looking for Game Start");
                 lobbyShots.get(new ActualField("Game Start"),
@@ -225,7 +228,8 @@ public class Client {
     }
 
     public void recieveLeft() {
-        while (true) {
+        recieveLeftBool = true;
+        while (recieveLeftBool) {
             try {
                 lobbyShots.get(new ActualField("Left"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
