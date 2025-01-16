@@ -44,15 +44,16 @@ public class Lobby {
         if (mouseHandler.wasMouseClicked()) {
             if (ge.isHost) {
                 if (startHover) {
-                    if (ge.online) {
+                    if (client.readyToStart()) {
                         new Thread(() -> client.recieveShots()).start();
                         new Thread(() -> client.recieveGameOver()).start();
+                        client.startPos = true;
+                        client.startGame = true;
+                        client.sendStart();
+                        Gamestate.state = Gamestate.PLAYING;
+                    } else {
+                        System.out.println("MISSING PLAYER");
                     }
-                    client.startPos = true;
-                    client.startGame = true;
-                    client.sendStart();
-                    Gamestate.state = Gamestate.PLAYING;
-
                 }
             }
             if (goBackHover) {
@@ -61,6 +62,7 @@ public class Lobby {
                     client.sendLeft();
                     client.closeLobby();
                 } else {
+                    client.sendLeftPlayer2();
                     client.sendNoGameStart();
                     try {
                         client.getOccupied();

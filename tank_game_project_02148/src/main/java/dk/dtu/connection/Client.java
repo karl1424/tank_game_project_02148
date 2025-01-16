@@ -112,9 +112,23 @@ public class Client {
             String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
             lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
             lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
-            lobbySend.put("Connected");
+            lobbySend.put("try to connect");
             lobbySend.get(new ActualField("Connected"));
+            System.out.println("Player " + (ge.isHost ? "1" : "2") + " connected");
         }
+    }
+
+    public boolean readyToStart() {
+        boolean bool = false;
+        try {
+            if (lobbySend.queryp(new FormalField(Boolean.class)) != null) {
+                Object[] startBool = lobbySend.get(new FormalField(Boolean.class));
+                bool = (boolean) startBool[0];
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return bool;
     }
 
     private void createPlayer() {
@@ -218,6 +232,14 @@ public class Client {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void sendLeftPlayer2() {
+        try {
+            lobbySend.put("Left");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

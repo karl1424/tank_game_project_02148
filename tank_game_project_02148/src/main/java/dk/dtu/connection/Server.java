@@ -13,29 +13,29 @@ public class Server {
     public static Space p4 = new SequentialSpace();
     public static SpaceRepository serverSpace;
     public static RemoteSpace lobbyRequests;
-    final static String IP = "10.209.242.14";
+    final static String IP = "localhost";
     final static String port = "31145";
     public static int lobbyID;
 
     public static void main(String[] args) throws UnknownHostException, IOException {
-        lobbyID = 0; 
+        lobbyID = 0;
         serverSpace = new SpaceRepository();
         serverSpace.addGate("tcp://" + IP + ":" + port + "/?conn");
         serverSpace.add("lobbyRequests", new SequentialSpace());
         System.out.println("server up");
-        
-//START PETRINET
+
+        // START PETRINET
 
         new Thread(() -> connectToRequests()).start();
         new Thread(() -> lobbyReq()).start();
         new Thread(() -> createLobbyHandler()).start();
         new Thread(() -> sendLobbyID()).start();
-        new Thread(() -> increaseLobbyID()).start();  
+        new Thread(() -> increaseLobbyID()).start();
         try {
             p0.put("token");
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }    
+        }
     }
 
     public static void connectToRequests() {
@@ -99,7 +99,8 @@ public class Server {
         }
     }
 }
-//END PETRINET
+
+// END PETRINET
 class lobbyHandeler implements Runnable {
     private String IP;
     private String port;
@@ -120,6 +121,8 @@ class lobbyHandeler implements Runnable {
 
         String uri = "tcp://" + IP + ":" + port + "/" + lobbyID + "shots" + "?conn";
 
+        new Thread(() -> getConnect()).start();
+
         try {
             Space lobbyShots = new RemoteSpace(uri);
             lobbyShots.query(new ActualField("Game Over"), new FormalField(String.class));
@@ -127,8 +130,35 @@ class lobbyHandeler implements Runnable {
             serverSpace.remove(lobbyID + "player1");
             serverSpace.remove(lobbyID + "player2");
             serverSpace.remove(lobbyID + "shots");
-            System.out.println("Closed lobby: "+lobbyID);
+            System.out.println("Closed lobby: " + lobbyID);
         } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getConnect() {
+        String uri1 = "tcp://" + IP + ":" + port + "/" + lobbyID + "player1" + "?conn";
+        String uri2 = "tcp://" + IP + ":" + port + "/" + lobbyID + "player2" + "?conn";
+
+        try {
+            Space player1Send = new RemoteSpace(uri1);
+            Space player2Send = new RemoteSpace(uri2);
+            player1Send.get(new ActualField("try to connect"));
+            player1Send.put("Connected");
+            System.out.println("Outside");
+            
+            while (true) {
+                player2Send.get(new ActualField("try to connect"));
+                player2Send.put("Connected");
+                System.out.println("Inside");
+                player1Send.put(true);
+                // boolean ready to start
+                player2Send.get(new ActualField("Left"));
+                System.out.println("PLAYER 2 LEFT");
+                // boolean not ready to start
+                player1Send.put(false);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
