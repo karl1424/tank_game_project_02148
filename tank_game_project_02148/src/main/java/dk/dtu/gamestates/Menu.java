@@ -69,7 +69,7 @@ public class Menu {
     }
 
     public void draw(GraphicsContext gc) {
-        Help.drawText(gc, Color.GREEN, ge.screenWidth, "TANK GAME", 100);
+        Help.drawText(gc, Color.GREEN, ge.screenWidth, "TANK GAME", 100, 150);
 
         Help.drawButton(gc, hostButtonY, hostHover, "HOST", buttonX, buttonWidth, buttonHeight);
         Help.drawButton(gc, joinButtonY, joinHover, "JOIN", buttonX, buttonWidth, buttonHeight);

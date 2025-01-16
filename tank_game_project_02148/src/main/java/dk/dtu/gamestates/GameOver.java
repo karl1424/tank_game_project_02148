@@ -55,7 +55,7 @@ public class GameOver {
 
         gc.setGlobalAlpha(1.0);
 
-        Help.drawText(gc, client.winner ? Color.GREEN : Color.RED, ge.screenWidth, client.winner ? "VICTORY" : "GAME OVER", 100);
+        Help.drawText(gc, client.winner ? Color.GREEN : Color.RED, ge.screenWidth, client.winner ? "VICTORY" : "GAME OVER", 100, 150);
 
         Help.drawButton(gc, goBackButtonY, goBackHover, "GO BACK", buttonX, buttonWidth, buttonHeight);
     }

@@ -35,7 +35,7 @@ public class Help {
         gc.fillText(text, textX, textY);
     }
 
-    public static void drawText(GraphicsContext gc, Color color, int screenWidth, String text, int size) {
+    public static void drawText(GraphicsContext gc, Color color, int screenWidth, String text, int size, int y) {
         gc.setFill(color);
         gc.setFont(new javafx.scene.text.Font("Arial", size));
 
@@ -44,7 +44,6 @@ public class Help {
         double textWidth = tempText.getBoundsInLocal().getWidth();
 
         int x = (int) (screenWidth - textWidth) / 2;
-        int y = 150;
 
         gc.fillText(text, x, y);
     }

@@ -15,6 +15,8 @@ public class Lobby {
     private boolean startHover = false;
     private boolean goBackHover = false;
 
+    private boolean missingPlayer = false;
+
     private int buttonScale = 10;
     private int spacing = 10;
     private int buttonWidth;
@@ -52,6 +54,7 @@ public class Lobby {
                         client.sendStart();
                         Gamestate.state = Gamestate.PLAYING;
                     } else {
+                        missingPlayer = true;
                         System.out.println("MISSING PLAYER");
                     }
                 }
@@ -61,6 +64,7 @@ public class Lobby {
                 if (ge.isHost) {
                     client.sendLeft();
                     client.closeLobby();
+                    missingPlayer = false;
                 } else {
                     client.sendLeftPlayer2();
                     client.sendNoGameStart();
@@ -77,7 +81,8 @@ public class Lobby {
     }
 
     public void draw(GraphicsContext gc) {
-        Help.drawText(gc, Color.GREEN, ge.screenWidth, "LOBBY ID: " + (ge.online ? client.getLobbyID() : ""), 50);
+        Help.drawText(gc, Color.GREEN, ge.screenWidth, "LOBBY ID: " + (ge.online ? client.getLobbyID() : ""), 50, 150);
+        Help.drawText(gc, Color.RED, ge.screenWidth, (missingPlayer ? "MISSING PLAYER 2" : ""), 50, 250);
 
         Help.drawButton(gc, startButtonY, startHover, "START", buttonX, buttonWidth, buttonHeight);
         Help.drawButton(gc, goBackButtonY, goBackHover, "GO BACK", buttonX, buttonWidth, buttonHeight);

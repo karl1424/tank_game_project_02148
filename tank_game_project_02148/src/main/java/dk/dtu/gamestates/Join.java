@@ -124,7 +124,7 @@ public class Join {
     }
 
     public void draw(GraphicsContext gc) {
-        Help.drawText(gc, Color.RED, ge.screenWidth, errorMessage, 50);
+        Help.drawText(gc, Color.RED, ge.screenWidth, errorMessage, 50, 150);
 
         drawTextBox(gc);
         
