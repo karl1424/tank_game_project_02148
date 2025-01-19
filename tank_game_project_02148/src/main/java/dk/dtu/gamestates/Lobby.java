@@ -68,11 +68,6 @@ public class Lobby {
                 } else {
                     client.sendLeftPlayer2();
                     client.sendNoGameStart();
-                    try {
-                        client.getOccupied();
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
                 }
                 ge.isHost = false;
                 Gamestate.state = Gamestate.MENU;

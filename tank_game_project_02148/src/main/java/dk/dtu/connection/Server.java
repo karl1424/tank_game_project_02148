@@ -115,8 +115,8 @@ class lobbyHandeler implements Runnable {
     }
 
     public void run() {
-        serverSpace.add(lobbyID + "player1", new StackSpace());
-        serverSpace.add(lobbyID + "player2", new StackSpace());
+        serverSpace.add(lobbyID + "player1", new PileSpace());
+        serverSpace.add(lobbyID + "player2", new PileSpace());
         serverSpace.add(lobbyID + "shots", new SequentialSpace());
 
         String uri = "tcp://" + IP + ":" + port + "/" + lobbyID + "shots" + "?conn";
@@ -143,23 +143,44 @@ class lobbyHandeler implements Runnable {
         try {
             Space player1Send = new RemoteSpace(uri1);
             Space player2Send = new RemoteSpace(uri2);
-            player1Send.get(new ActualField("try to connect"));
-            player1Send.put("Connected");
+            player1Send.get(new ActualField("join/leave"), new ActualField("try to connect"));
+            player1Send.put("connection","Connected");
             System.out.println("Outside");
             
             while (true) {
-                player2Send.get(new ActualField("try to connect"));
-                player2Send.put("Connected");
-                System.out.println("Inside");
-                player1Send.put(true);
-                // boolean ready to start
-                player2Send.get(new ActualField("Left"));
-                System.out.println("PLAYER 2 LEFT");
-                // boolean not ready to start
-                player1Send.put(false);
+                Object [] player2status = player2Send.get(new ActualField("join/leave"),new FormalField(String.class));
+                if (((String)player2status[1]).equals("try to connect")) {
+                    if(!checkOccupied(player2Send)){
+                        System.out.println("Not occupied");
+                        player2Send.put("occupied");
+                        player2Send.put("connection","Connected");
+                        System.out.println("Inside");
+                        // boolean ready to start
+                        player1Send.put(true);
+                    } else {
+                        System.out.println("Occupied");
+                        player2Send.put("connection","Not connected");
+                    }
+                
+                } else {
+                    player2Send.get(new ActualField("occupied"));
+                    System.out.println("PLAYER 2 LEFT");
+                    // boolean not ready to start
+                    player1Send.put(false);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean checkOccupied(Space space) {
+        Object [] isOccupied = null;
+        try {
+             isOccupied = space.queryp(new ActualField("occupied"));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return (isOccupied != null);
     }
 }

@@ -77,27 +77,23 @@ public class Join {
                 client.setLobbyID(Integer.parseInt(textBoxContent));
 
                 client.initLobby();
-                    Object[] occupied = client.queryOccupied();
-                    if (occupied == null) {
-                        client.putOccupied();
-
-                        try {
-                            client.connectToServer(); //Join lobby
-                            errorMessage = "";
-                        } catch (InterruptedException | IOException e) {
-                            errorMessage = "CANNOT FIND THE LOBBY";
-                            textBoxContent = "";
-                            return;
-                        }
-
-                        new Thread(() -> client.recieveGameStart()).start();
-                        new Thread(() -> client.recieveLeft()).start();
-
-                        Gamestate.state = Gamestate.LOBBY;
-                    } else {
+                    try {
+                        client.connectToServer(); //Join lobby
+                        errorMessage = "";
+                    } catch (InterruptedException | IOException e) {
+                        errorMessage = "CANNOT FIND THE LOBBY";
+                        textBoxContent = "";
+                        return;
+                    } catch (NullPointerException e) {
                         errorMessage = "LOBBY IS FULL";
+                        textBoxContent = "";
+                        return;
                     }
 
+                    new Thread(() -> client.recieveGameStart()).start();
+                    new Thread(() -> client.recieveLeft()).start();
+
+                    Gamestate.state = Gamestate.LOBBY;
                 textBoxContent = "";
 
             }

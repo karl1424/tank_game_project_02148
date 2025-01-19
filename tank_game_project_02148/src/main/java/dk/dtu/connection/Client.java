@@ -99,6 +99,9 @@ public class Client {
             establishConnectionToLobby(lobbyID);         
             if(lobbyHandShake()){
                 System.out.println("Player " + (ge.isHost ? "1" : "2") + " connected");
+            } else {
+                System.out.println("Player " + (ge.isHost ? "1" : "2") + " not connected");
+                throw new NullPointerException();
             }
     }
     public void establishConnectionToLobby(int lobbyID) throws InterruptedException, UnknownHostException, IOException {
@@ -114,10 +117,13 @@ public class Client {
     }
 
     public boolean lobbyHandShake() throws InterruptedException, UnknownHostException, IOException {
-        lobbySend.put("try to connect");
-        lobbySend.get(new ActualField("Connected"));
-        return true;
-    }
+        lobbySend.put("join/leave","try to connect");
+        System.out.println("sending try");
+        Object [] connection = lobbySend.get(new ActualField("connection"),new FormalField(String.class));
+        System.out.println("getting connection");
+        System.out.println(((String) connection[1]).equals("Connected"));
+        return(((String) connection[1]).equals("Connected"));
+        }
 
     
 
@@ -249,7 +255,7 @@ public class Client {
 
     public void sendLeftPlayer2() {
         try {
-            lobbySend.put("Left");
+            lobbySend.put("join/leave","Left");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -312,32 +318,6 @@ public class Client {
     public void closeLobby() {
         try {
             lobbyShots.put("Game Over", "lobbyclose");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void getOccupied() {
-        try {
-            lobbyShots.get(new ActualField("occupied"));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Object[] queryOccupied() {
-        Object[] query = null;
-        try {
-            query = lobbyShots.queryp(new ActualField("occupied"));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return query;
-    }
-
-    public void putOccupied() {
-        try {
-            lobbyShots.put("occupied");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
