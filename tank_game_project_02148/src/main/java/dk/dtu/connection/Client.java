@@ -77,23 +77,49 @@ public class Client {
 
     }
 
+    // Host Connect to server
     public void connectToServerHost() {
-        if (ge.online) {
-            // Connect to server
-            if (ge.isHost) {
-                System.out.println("Attempting to create lobby");
-                try {
-                    String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
-                    server = new RemoteSpace(uri);
-                    server.put("host");
-                    Object[] lobby = server.get(new ActualField("lobby"), new FormalField(Integer.class));
-                    lobbyID = (int) lobby[1];
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
+        if (ge.isHost) {
+            System.out.println("Attempting to create lobby");
+            try {
+                String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
+                server = new RemoteSpace(uri);
+                server.put("host");
+                Object[] lobby = server.get(new ActualField("lobby"), new FormalField(Integer.class));
+                lobbyID = (int) lobby[1];
+            } catch (Exception e) {
+                System.out.println(e);
             }
         }
     }
+
+    // Connect to lobby //Maybe Change name to connectToLobby??
+    public void connectToServer() throws InterruptedException, UnknownHostException, IOException {
+        System.out.println(lobbyID);
+            establishConnectionToLobby(lobbyID);         
+            if(lobbyHandShake()){
+                System.out.println("Player " + (ge.isHost ? "1" : "2") + " connected");
+            }
+    }
+    public void establishConnectionToLobby(int lobbyID) throws InterruptedException, UnknownHostException, IOException {
+        String uri1 = getLobbyUri(String.valueOf(lobbyID) + "player1");
+        String uri2 = getLobbyUri(String.valueOf(lobbyID) + "player2");
+        lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
+        lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
+    }
+
+    public String getLobbyUri(String name) {
+        String Uri = "tcp://" + host + ":" + port + "/" + name + "?conn";
+        return Uri;
+    }
+
+    public boolean lobbyHandShake() throws InterruptedException, UnknownHostException, IOException {
+        lobbySend.put("try to connect");
+        lobbySend.get(new ActualField("Connected"));
+        return true;
+    }
+
+    
 
     public void initLobby() {
         String uriS = "tcp://" + host + ":" + port + "/" + lobbyID + "shots" + "?conn";
@@ -101,20 +127,6 @@ public class Client {
             lobbyShots = new RemoteSpace(uriS);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void connectToServer() throws InterruptedException, UnknownHostException, IOException {
-        // Connect to lobby
-        if (ge.online) {
-            System.out.println(lobbyID);
-            String uri1 = "tcp://" + host + ":" + port + "/" + lobbyID + "player1" + "?conn";
-            String uri2 = "tcp://" + host + ":" + port + "/" + lobbyID + "player2" + "?conn";
-            lobbySend = ge.isHost ? new RemoteSpace(uri1) : new RemoteSpace(uri2);
-            lobbyGet = ge.isHost ? new RemoteSpace(uri2) : new RemoteSpace(uri1);
-            lobbySend.put("try to connect");
-            lobbySend.get(new ActualField("Connected"));
-            System.out.println("Player " + (ge.isHost ? "1" : "2") + " connected");
         }
     }
 

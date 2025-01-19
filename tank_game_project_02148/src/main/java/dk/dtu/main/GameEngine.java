@@ -68,9 +68,6 @@ public class GameEngine extends Pane implements Runnable {
         gameOver = new GameOver(this, mouseHandler, client);
         grid = new Grid(this);
 
-        // client.connectToServerHost();
-        // client.connectToServer();
-
         startGameThread();
     }
 

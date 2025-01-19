@@ -76,14 +76,13 @@ public class Join {
                 
                 client.setLobbyID(Integer.parseInt(textBoxContent));
 
-                if (ge.online) {
-                    client.initLobby();
+                client.initLobby();
                     Object[] occupied = client.queryOccupied();
                     if (occupied == null) {
                         client.putOccupied();
 
                         try {
-                            client.connectToServer();
+                            client.connectToServer(); //Join lobby
                             errorMessage = "";
                         } catch (InterruptedException | IOException e) {
                             errorMessage = "CANNOT FIND THE LOBBY";
@@ -99,7 +98,6 @@ public class Join {
                         errorMessage = "LOBBY IS FULL";
                     }
 
-                }
                 textBoxContent = "";
 
             }
