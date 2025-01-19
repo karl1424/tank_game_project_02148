@@ -78,7 +78,7 @@ public class Join {
 
                 client.initLobby();
                     try {
-                        client.connectToServer(); //Join lobby
+                        client.connectToLobby(); //Join lobby
                         errorMessage = "";
                     } catch (InterruptedException | IOException e) {
                         errorMessage = "CANNOT FIND THE LOBBY";

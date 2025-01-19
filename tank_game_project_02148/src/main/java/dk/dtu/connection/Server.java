@@ -117,19 +117,19 @@ class lobbyHandeler implements Runnable {
     public void run() {
         serverSpace.add(lobbyID + "player1", new PileSpace());
         serverSpace.add(lobbyID + "player2", new PileSpace());
-        serverSpace.add(lobbyID + "shots", new SequentialSpace());
+        serverSpace.add(lobbyID + "events", new SequentialSpace());
 
-        String uri = "tcp://" + IP + ":" + port + "/" + lobbyID + "shots" + "?conn";
+        String uri = "tcp://" + IP + ":" + port + "/" + lobbyID + "events" + "?conn";
 
         new Thread(() -> getConnect()).start();
 
         try {
-            Space lobbyShots = new RemoteSpace(uri);
-            lobbyShots.query(new ActualField("Game Over"), new FormalField(String.class));
+            Space lobbyEvents = new RemoteSpace(uri);
+            lobbyEvents.query(new ActualField("Game Over"), new FormalField(String.class));
             Thread.sleep(200);
             serverSpace.remove(lobbyID + "player1");
             serverSpace.remove(lobbyID + "player2");
-            serverSpace.remove(lobbyID + "shots");
+            serverSpace.remove(lobbyID + "events");
             System.out.println("Closed lobby: " + lobbyID);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

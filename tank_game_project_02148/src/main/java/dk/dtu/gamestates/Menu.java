@@ -50,9 +50,9 @@ public class Menu {
             if (hostHover) {
                 ge.isHost = true;
                 client.setPlayerNames();
-                client.connectToServerHost(); //Host server
+                client.connectToLobbyHost(); //Host server
                 try {
-                    client.connectToServer(); //Host connect to lobby
+                    client.connectToLobby(); //Host connect to lobby
                 } catch (InterruptedException | IOException e) {
                     System.out.println("SOMETHING WENT WRONG!");
                 }

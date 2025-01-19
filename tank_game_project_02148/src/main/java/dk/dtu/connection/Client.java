@@ -23,7 +23,7 @@ public class Client {
     private GameEngine ge;
     private InputHandler inputHandler;
 
-    private Space server, lobbySend, lobbyGet, lobbyShots;;
+    private Space server, lobbySend, lobbyGet, lobbyEvents;;
 
     private String playername;
 
@@ -78,7 +78,7 @@ public class Client {
     }
 
     // Host Connect to server
-    public void connectToServerHost() {
+    public void connectToLobbyHost() {
         if (ge.isHost) {
             System.out.println("Attempting to create lobby");
             try {
@@ -94,7 +94,7 @@ public class Client {
     }
 
     // Connect to lobby //Maybe Change name to connectToLobby??
-    public void connectToServer() throws InterruptedException, UnknownHostException, IOException {
+    public void connectToLobby() throws InterruptedException, UnknownHostException, IOException {
         System.out.println(lobbyID);
             establishConnectionToLobby(lobbyID);         
             if(lobbyHandShake()){
@@ -128,9 +128,9 @@ public class Client {
     
 
     public void initLobby() {
-        String uriS = "tcp://" + host + ":" + port + "/" + lobbyID + "shots" + "?conn";
+        String uriS = "tcp://" + host + ":" + port + "/" + lobbyID + "events" + "?conn";
         try {
-            lobbyShots = new RemoteSpace(uriS);
+            lobbyEvents = new RemoteSpace(uriS);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -167,7 +167,7 @@ public class Client {
             spawnProjectile(player.getX(), player.getY(), player.getAngle(), 0);
             if (ge.online) {
                 try {
-                    lobbyShots.put(playername);
+                    lobbyEvents.put(playername);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -213,7 +213,7 @@ public class Client {
     public void recieveShots() {
         while (true) {
             try {
-                lobbyShots.get(ge.isHost ? new ActualField("player2") : new ActualField("player1"));
+                lobbyEvents.get(ge.isHost ? new ActualField("player2") : new ActualField("player1"));
                 spawnProjectile((int) coordinates[1], (int) coordinates[2], (int) coordinates[3], 1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -223,7 +223,7 @@ public class Client {
 
     public void sendStart() {
         try {
-            lobbyShots.put("Game Start", ge.isHost ? "player1" : "player2", true);
+            lobbyEvents.put("Game Start", ge.isHost ? "player1" : "player2", true);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -233,7 +233,7 @@ public class Client {
         while (true) {
             try {
                 System.out.println("Looking for Game Start");
-                Object[] gameStart = lobbyShots.get(new ActualField("Game Start"),
+                Object[] gameStart = lobbyEvents.get(new ActualField("Game Start"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"),
                         new FormalField(Boolean.class));
                 if ((boolean) gameStart[2]) {
@@ -263,7 +263,7 @@ public class Client {
 
     public void sendLeft() {
         try {
-            lobbyShots.put("Left", ge.isHost ? "player1" : "player2");
+            lobbyEvents.put("Left", ge.isHost ? "player1" : "player2");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -271,7 +271,7 @@ public class Client {
 
     public void sendNoGameStart() {
         try {
-            lobbyShots.put("Game Start", ge.isHost ? "player2" : "player1", false);
+            lobbyEvents.put("Game Start", ge.isHost ? "player2" : "player1", false);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -280,7 +280,7 @@ public class Client {
     public void recieveLeft() {
         while (true) {
             try {
-                lobbyShots.get(new ActualField("Left"),
+                lobbyEvents.get(new ActualField("Left"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
                 Gamestate.state = Gamestate.MENU;
                 System.out.println("Left");
@@ -293,19 +293,21 @@ public class Client {
     public void sendGameOver() {
         System.out.println("sending Game Over");
         try {
-            lobbyShots.put("Game Over", ge.isHost ? "player1" : "player2");
+            lobbyEvents.put("Game Over", ge.isHost ? "player1" : "player2");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     public void recieveGameOver() {
-        while (true) {
+        boolean checkGameOver = true;
+        while (checkGameOver) {
             try {
                 System.out.println("Looking for Game Over");
-                lobbyShots.get(new ActualField("Game Over"),
+                lobbyEvents.query(new ActualField("Game Over"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
                 winner = true;
+                checkGameOver = false;
                 Gamestate.state = Gamestate.GAMEOVER;
                 System.out.println("Game Over");
 
@@ -317,7 +319,7 @@ public class Client {
 
     public void closeLobby() {
         try {
-            lobbyShots.put("Game Over", "lobbyclose");
+            lobbyEvents.put("Game Over", "lobbyclose");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
