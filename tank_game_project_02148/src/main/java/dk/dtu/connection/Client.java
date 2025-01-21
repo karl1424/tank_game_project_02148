@@ -263,7 +263,7 @@ public class Client {
         while (true) {
             try {
                 System.out.println("Looking for Game Over");
-                lobbyShots.get(new ActualField("Game Over"),
+                lobbyShots.query(new ActualField("Game Over"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
                 winner = true;
                 Gamestate.state = Gamestate.GAMEOVER;
