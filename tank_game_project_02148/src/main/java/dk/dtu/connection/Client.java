@@ -48,7 +48,6 @@ public class Client {
 
         this.port = 31145;
         this.host = ge.IP;
-        // this.lobbyID = 0;
 
     }
 
@@ -64,7 +63,7 @@ public class Client {
 
         createPlayer();
 
-        // Player 2 starting possitions:
+        // Player starting positions:
         if (playername == "player1") {
             opponentStartPosX = player.p2X;
             opponentStartPosY = player.p2Y;
@@ -80,7 +79,6 @@ public class Client {
     // Host Connect to server
     public void connectToLobbyHost() {
         if (ge.isHost) {
-            System.out.println("Attempting to create lobby");
             try {
                 String uri = "tcp://" + host + ":" + port + "/lobbyRequests?conn";
                 server = new RemoteSpace(uri);
@@ -88,22 +86,19 @@ public class Client {
                 Object[] lobby = server.get(new ActualField("lobby"), new FormalField(Integer.class));
                 lobbyID = (int) lobby[1];
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
     }
 
-    // Connect to lobby //Maybe Change name to connectToLobby??
+    // Connect to lobby
     public void connectToLobby() throws InterruptedException, UnknownHostException, IOException {
-        System.out.println(lobbyID);
-            establishConnectionToLobby(lobbyID);         
-            if(lobbyHandShake()){
-                System.out.println("Player " + (ge.isHost ? "1" : "2") + " connected");
-            } else {
-                System.out.println("Player " + (ge.isHost ? "1" : "2") + " not connected");
-                throw new NullPointerException();
-            }
+        establishConnectionToLobby(lobbyID);
+        if (!lobbyHandShake()) {
+            throw new NullPointerException();
+        }
     }
+
     public void establishConnectionToLobby(int lobbyID) throws InterruptedException, UnknownHostException, IOException {
         String uri1 = getLobbyUri(String.valueOf(lobbyID) + "player1");
         String uri2 = getLobbyUri(String.valueOf(lobbyID) + "player2");
@@ -117,15 +112,10 @@ public class Client {
     }
 
     public boolean lobbyHandShake() throws InterruptedException, UnknownHostException, IOException {
-        lobbySend.put("join/leave","try to connect");
-        System.out.println("sending try");
-        Object [] connection = lobbySend.get(new ActualField("connection"),new FormalField(String.class));
-        System.out.println("getting connection");
-        System.out.println(((String) connection[1]).equals("Connected"));
-        return(((String) connection[1]).equals("Connected"));
-        }
-
-    
+        lobbySend.put("join/leave", "try to connect");
+        Object[] connection = lobbySend.get(new ActualField("connection"), new FormalField(String.class));
+        return (((String) connection[1]).equals("Connected"));
+    }
 
     public void initLobby() {
         String uriS = "tcp://" + host + ":" + port + "/" + lobbyID + "events" + "?conn";
@@ -165,23 +155,19 @@ public class Client {
         if (player.getShot()) {
             player.shot = false;
             spawnProjectile(player.getX(), player.getY(), player.getAngle(), 0);
-            if (ge.online) {
                 try {
                     lobbyEvents.put(playername);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
         }
 
         if (prevX != player.getX() || prevY != player.getY() || prevAngle != player.getAngle()) {
-            if (ge.online) {
                 try {
                     lobbySend.put(playername, player.getX(), player.getY(), player.getAngle());
                 } catch (Exception e) {
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
-            }
 
         }
         prevX = player.getX();
@@ -194,19 +180,13 @@ public class Client {
             coordinates = lobbyGet.queryp(ge.isHost ? new ActualField("player2") : new ActualField("player1"),
                     new FormalField(Integer.class), new FormalField(Integer.class), new FormalField(Integer.class));
             if (coordinates != null) {
-                /*
-                 * System.out.println(coordinates[0] + ": " + "x = " + coordinates[2].toString()
-                 * + ", y = "
-                 * + coordinates[2].toString() + ", angle = "
-                 * + coordinates[3].toString());
-                 */
                 opponentPrevX = (int) coordinates[1];
                 opponentPrevY = (int) coordinates[2];
                 opponentPrevAngle = (int) coordinates[3];
             }
 
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -232,7 +212,6 @@ public class Client {
     public void recieveGameStart() {
         while (true) {
             try {
-                System.out.println("Looking for Game Start");
                 Object[] gameStart = lobbyEvents.get(new ActualField("Game Start"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"),
                         new FormalField(Boolean.class));
@@ -242,7 +221,6 @@ public class Client {
                     startPos = true;
                     startGame = true;
                     Gamestate.state = Gamestate.PLAYING;
-                    System.out.println("Game Start");
                 } else {
                     return;
                 }
@@ -255,7 +233,7 @@ public class Client {
 
     public void sendLeftPlayer2() {
         try {
-            lobbySend.put("join/leave","Left");
+            lobbySend.put("join/leave", "Left");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -283,7 +261,6 @@ public class Client {
                 lobbyEvents.get(new ActualField("Left"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
                 Gamestate.state = Gamestate.MENU;
-                System.out.println("Left");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -292,7 +269,6 @@ public class Client {
 
     public void sendGameOver() {
         projectileList.clear();
-        System.out.println("sending Game Over");
         try {
             lobbyEvents.put("Game Over", ge.isHost ? "player1" : "player2");
         } catch (InterruptedException e) {
@@ -304,14 +280,12 @@ public class Client {
         boolean checkGameOver = true;
         while (checkGameOver) {
             try {
-                System.out.println("Looking for Game Over");
                 lobbyEvents.query(new ActualField("Game Over"),
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
                 winner = true;
                 checkGameOver = false;
                 projectileList.clear();
                 Gamestate.state = Gamestate.GAMEOVER;
-                System.out.println("Game Over");
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -341,9 +315,6 @@ public class Client {
                 for (int i = 0; i < projectileList.size(); i++) {
                     projectileList.get(i).repaint(gc);
                     projectileList.get(i).update(player.getHitbox(), ge.grid.getGrid());
-                    // if (!projectileList.get(i).isActive()) {
-                    // projectileList.remove(i);
-                    // }
                 }
             }
         }
@@ -359,14 +330,13 @@ public class Client {
 
             gc.restore();
         } else {
-            // System.out.println("Drawp player1");
             gc.save();
 
             if (!startPos) {
                 gc.translate((double) opponentPrevX + ge.tileSize, (double) (int) opponentPrevY + ge.tileSize);
                 gc.rotate((double) opponentPrevAngle);
             } else {
-                // Draw player 2 in correct starting possition;
+                // Draw player 2 in correct starting position;
                 gc.translate(opponentStartPosX + ge.tileSize, opponentStartPosY + ge.tileSize);
                 gc.rotate(opponentStartAngle);
                 startGame = false;

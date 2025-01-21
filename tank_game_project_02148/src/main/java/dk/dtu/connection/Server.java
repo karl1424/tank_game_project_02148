@@ -145,7 +145,6 @@ class lobbyHandeler implements Runnable {
             Space player2Send = new RemoteSpace(uri2);
             player1Send.get(new ActualField("join/leave"), new ActualField("try to connect"));
             player1Send.put("connection","Connected");
-            System.out.println("Outside");
             
             while (true) {
                 Object [] player2status = player2Send.get(new ActualField("join/leave"),new FormalField(String.class));
@@ -154,7 +153,6 @@ class lobbyHandeler implements Runnable {
                         System.out.println("Not occupied");
                         player2Send.put("occupied");
                         player2Send.put("connection","Connected");
-                        System.out.println("Inside");
                         // boolean ready to start
                         player1Send.put(true);
                     } else {

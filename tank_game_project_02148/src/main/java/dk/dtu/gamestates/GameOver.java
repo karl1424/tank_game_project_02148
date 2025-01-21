@@ -32,19 +32,17 @@ public class GameOver {
         goBackButtonY = (ge.screenHeight - buttonHeight) / 2 + 2 * buttonHeight + 2 * spacing;
     }
 
-    
     public void update() {
         goBackHover = Help.checkHover(goBackButtonY, mouseHandler, buttonX, buttonWidth, buttonHeight);
 
-        if(mouseHandler.wasMouseClicked()) {
-            if(goBackHover) {
+        if (mouseHandler.wasMouseClicked()) {
+            if (goBackHover) {
                 ge.isHost = false;
                 client.winner = false;
                 Gamestate.state = Gamestate.MENU;
             }
         }
     }
-
 
     public void draw(GraphicsContext gc) {
 
@@ -55,7 +53,8 @@ public class GameOver {
 
         gc.setGlobalAlpha(1.0);
 
-        Help.drawText(gc, client.winner ? Color.GREEN : Color.RED, ge.screenWidth, client.winner ? "VICTORY" : "GAME OVER", 100, 150);
+        Help.drawText(gc, client.winner ? Color.GREEN : Color.RED, ge.screenWidth,
+                client.winner ? "VICTORY" : "GAME OVER", 100, 150);
 
         Help.drawButton(gc, goBackButtonY, goBackHover, "GO BACK", buttonX, buttonWidth, buttonHeight);
     }

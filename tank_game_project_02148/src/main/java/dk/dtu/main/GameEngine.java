@@ -15,8 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
-    public boolean isHost = false; 
-    public boolean online = true;
+    public boolean isHost = false;
     public String IP = "10.209.242.14";
 
     private final int rows = 36;
@@ -83,7 +82,6 @@ public class GameEngine extends Pane implements Runnable {
         long lastTime = System.nanoTime();
         long currentTime;
         long timer = 0;
-        //int drawCount = 0;
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
@@ -95,12 +93,9 @@ public class GameEngine extends Pane implements Runnable {
                 update();
                 repaint(gc);
                 delta--;
-                //drawCount++;
             }
 
             if (timer >= 1000000000) {
-                // System.out.println("FPS: " + drawCount);
-                //drawCount = 0;
                 timer = 0;
             }
         }
@@ -120,9 +115,7 @@ public class GameEngine extends Pane implements Runnable {
             case PLAYING:
                 client.getPlayer().update();
                 client.sendCoordinate();
-                if (online) {
-                    client.recieveCoordinates();
-                }
+                client.recieveCoordinates();
                 break;
             case GAMEOVER:
                 gameOver.update();
@@ -155,7 +148,6 @@ public class GameEngine extends Pane implements Runnable {
                 gc.fillRect(0, 0, screenWidth, screenHeight);
                 grid.drawGrid(gc);
                 client.getPlayer().repaint(gc);
-
                 client.drawOpponent(gc);
                 break;
             case GAMEOVER:
@@ -165,18 +157,11 @@ public class GameEngine extends Pane implements Runnable {
                 break;
         }
 
-        /*
-         * if (!this.getChildren().contains(client.getPlayer().getHitbox())) {
-         * this.getChildren().add(client.getPlayer().getHitbox());
-         * }
-         */
-
     }
 
     public void stopGame() {
         client.sendGameOver();
         Gamestate.state = Gamestate.GAMEOVER;
     }
-
 
 }

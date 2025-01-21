@@ -56,12 +56,11 @@ public class Lobby {
                         Gamestate.state = Gamestate.PLAYING;
                     } else {
                         missingPlayer = true;
-                        System.out.println("MISSING PLAYER");
                     }
                 }
             }
             if (goBackHover) {
-                // RESET LOBBY!!!
+                // reset lobby
                 if (ge.isHost) {
                     client.sendLeft();
                     client.closeLobby();
@@ -77,7 +76,7 @@ public class Lobby {
     }
 
     public void draw(GraphicsContext gc) {
-        Help.drawText(gc, Color.GREEN, ge.screenWidth, "LOBBY ID: " + (ge.online ? client.getLobbyID() : ""), 50, 150);
+        Help.drawText(gc, Color.GREEN, ge.screenWidth, "LOBBY ID: " + client.getLobbyID(), 50, 150);
         Help.drawText(gc, Color.RED, ge.screenWidth, (missingPlayer ? "MISSING PLAYER 2" : ""), 50, 250);
 
         Help.drawButton(gc, startButtonY, startHover, "START", buttonX, buttonWidth, buttonHeight);

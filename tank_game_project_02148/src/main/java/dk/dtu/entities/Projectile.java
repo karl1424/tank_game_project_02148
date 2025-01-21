@@ -79,8 +79,6 @@ public class Projectile {
             }
         }
 
-        //System.out.println(x + ", " + y + ", " + numberOfHits);
-
     }
 
     private void updateHitbox() {
@@ -148,10 +146,6 @@ public class Projectile {
         } else {
             gc.setFill(Color.BLACK);
             gc.fillOval(x - 5, y - 5, 10, 10);
-            // gc.setStroke(Color.RED);
-            // gc.strokeLine(x, y, x + Math.cos(Math.toRadians(angle)) * 20, y +
-            // Math.sin(Math.toRadians(angle)) * 20);
-
         }
     }
 

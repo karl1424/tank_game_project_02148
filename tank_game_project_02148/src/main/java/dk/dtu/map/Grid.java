@@ -69,7 +69,6 @@ public class Grid {
                 }
             }
         }
-        //System.out.println(grid[20][10] != null);
     }
 
     public void drawGrid(GraphicsContext gc) {
@@ -77,9 +76,7 @@ public class Grid {
             for (int j = 0; j < grid[i].length; j++) {
                 if (grid[i][j] != null) {
                     gc.setFill(grid[i][j].getFill());
-                    //gc.setStroke(grid[i][j].getStroke());
                     gc.fillRect(grid[i][j].getX(), grid[i][j].getY(), grid[i][j].getWidth(), grid[i][j].getHeight());
-                    //gc.strokeRect(grid[i][j].getX(), grid[i][j].getY(), grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
             }
         }

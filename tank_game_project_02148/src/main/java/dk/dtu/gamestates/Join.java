@@ -1,4 +1,5 @@
 package dk.dtu.gamestates;
+
 import java.io.IOException;
 
 import dk.dtu.connection.Client;
@@ -53,7 +54,6 @@ public class Join {
     }
 
     public void update() {
-        // Opdater musens hover til knapperne
         joinHover = Help.checkHover(joinButtonY, mouseHandler, buttonX, buttonWidth, buttonHeight);
         goBackHover = Help.checkHover(goBackButtonY, mouseHandler, buttonX, buttonWidth, buttonHeight);
 
@@ -73,27 +73,27 @@ public class Join {
                 }
 
                 client.setPlayerNames();
-                
+
                 client.setLobbyID(Integer.parseInt(textBoxContent));
 
                 client.initLobby();
-                    try {
-                        client.connectToLobby(); //Join lobby
-                        errorMessage = "";
-                    } catch (InterruptedException | IOException e) {
-                        errorMessage = "CANNOT FIND THE LOBBY";
-                        textBoxContent = "";
-                        return;
-                    } catch (NullPointerException e) {
-                        errorMessage = "LOBBY IS FULL";
-                        textBoxContent = "";
-                        return;
-                    }
+                try {
+                    client.connectToLobby(); // Join lobby
+                    errorMessage = "";
+                } catch (InterruptedException | IOException e) {
+                    errorMessage = "CANNOT FIND THE LOBBY";
+                    textBoxContent = "";
+                    return;
+                } catch (NullPointerException e) {
+                    errorMessage = "LOBBY IS FULL";
+                    textBoxContent = "";
+                    return;
+                }
 
-                    new Thread(() -> client.recieveGameStart()).start();
-                    new Thread(() -> client.recieveLeft()).start();
+                new Thread(() -> client.recieveGameStart()).start();
+                new Thread(() -> client.recieveLeft()).start();
 
-                    Gamestate.state = Gamestate.LOBBY;
+                Gamestate.state = Gamestate.LOBBY;
                 textBoxContent = "";
 
             }
@@ -121,7 +121,7 @@ public class Join {
         Help.drawText(gc, Color.RED, ge.screenWidth, errorMessage, 50, 150);
 
         drawTextBox(gc);
-        
+
         Help.drawButton(gc, joinButtonY, joinHover, "JOIN LOBBY", buttonX, buttonWidth, buttonHeight);
         Help.drawButton(gc, goBackButtonY, goBackHover, "GO BACK", buttonX, buttonWidth, buttonHeight);
     }

@@ -6,14 +6,16 @@ import javafx.scene.paint.Color;
 
 public class Help {
 
-    public static boolean checkHover(int buttonY, MouseHandler mouseHandler, int buttonX, int buttonWidth, int buttonHeight) {
+    public static boolean checkHover(int buttonY, MouseHandler mouseHandler, int buttonX, int buttonWidth,
+            int buttonHeight) {
         return mouseHandler.getMouseX() >= buttonX
                 && mouseHandler.getMouseX() <= buttonX + buttonWidth
                 && mouseHandler.getMouseY() >= buttonY
                 && mouseHandler.getMouseY() <= buttonY + buttonHeight;
     }
 
-    public static void drawButton(GraphicsContext gc, int buttonY, boolean hover, String text, int buttonX, int buttonWidth, int buttonHeight) {
+    public static void drawButton(GraphicsContext gc, int buttonY, boolean hover, String text, int buttonX,
+            int buttonWidth, int buttonHeight) {
         if (hover) {
             gc.setFill(Color.DIMGRAY);
         } else {

@@ -1,6 +1,5 @@
 package dk.dtu.entities;
 
-import dk.dtu.gamestates.Gamestate;
 import dk.dtu.inputs.InputHandler;
 import dk.dtu.main.GameEngine;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,11 +19,11 @@ public class Player {
     private int angleSpeed = 6;
     private int speed = 4;
 
-    //Player 1 Start positions:
+    // Player 1 Start positions:
     public int p1X = 100;
     public int p1Y = 100;
     public int p1Angle = 0;
-    //Player 2 Start positions:
+    // Player 2 Start positions:
     public int p2X = 600;
     public int p2Y = 350;
     public int p2Angle = 180;
@@ -36,12 +35,11 @@ public class Player {
     private boolean canShoot = true;
     public boolean shot = false;
 
-
     public Player(GameEngine ge, InputHandler inputHandler, String playerName) {
         this.ge = ge;
         this.playerName = playerName;
         this.inputHandler = inputHandler;
-        if(playerName == "player1"){
+        if (playerName == "player1") {
             x = p1X;
             y = p1Y;
             angle = p1Angle;
@@ -67,10 +65,6 @@ public class Player {
     public void update() {
         previousX = x;
         previousY = y;
-
-        if (inputHandler.escapePressed) {
-            Gamestate.state = Gamestate.MENU;
-        }
 
         if (inputHandler.leftPressed) {
             angle -= angleSpeed;
@@ -102,7 +96,6 @@ public class Player {
         if (checkCollision()) {
             x = previousX;
             y = previousY;
-            // angle = previousAngle;
             updateHitbox();
         }
 
@@ -111,8 +104,6 @@ public class Player {
     private void updateHitbox() {
         hitbox.setCenterX(x + ge.tileSize);
         hitbox.setCenterY(y + ge.tileSize);
-        // hitbox.setRotate(angle);
-        // System.out.println(hitbox.getX() + ", " + hitbox.getY());
     }
 
     private boolean checkCollision() {
@@ -148,14 +139,6 @@ public class Player {
         gc.drawImage(playerImage, -ge.tileSize, -ge.tileSize, ge.tileSize * 2, ge.tileSize * 2);
 
         gc.restore();
-
-        /*gc.setStroke(Color.RED);
-        gc.setLineWidth(2);
-        gc.strokeOval(
-                hitbox.getCenterX() - hitbox.getRadius(),
-                hitbox.getCenterY() - hitbox.getRadius(),
-                hitbox.getRadius() * 2,
-                hitbox.getRadius() * 2);*/
     }
 
     public void startCooldown() {
@@ -187,5 +170,5 @@ public class Player {
     public boolean getShot() {
         return shot;
     }
-    
+
 }
