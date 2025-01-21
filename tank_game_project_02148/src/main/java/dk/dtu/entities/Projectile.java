@@ -74,7 +74,6 @@ public class Projectile {
 
         if (numberOfHits > 0) {
             if (projectileHitbox.intersects(tankHitbox.getBoundsInLocal())) {
-                creationTime = ge.projectileLifespan;
                 isActive = false;
                 ge.stopGame();
             }

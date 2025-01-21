@@ -25,8 +25,8 @@ public class Player {
     public int p1Y = 100;
     public int p1Angle = 0;
     //Player 2 Start positions:
-    public int p2X = 200;
-    public int p2Y = 200; 
+    public int p2X = 600;
+    public int p2Y = 350;
     public int p2Angle = 180;
 
     private Image playerImage;
@@ -52,7 +52,7 @@ public class Player {
         }
         this.previousX = x;
         this.previousY = y;
-        this.COOLDOWN = ge.projectileLifespan;
+        this.COOLDOWN = ge.projectileLifespan / 3;
         init();
     }
 

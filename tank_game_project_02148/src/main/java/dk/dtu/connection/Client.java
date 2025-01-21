@@ -291,6 +291,7 @@ public class Client {
     }
 
     public void sendGameOver() {
+        projectileList.clear();
         System.out.println("sending Game Over");
         try {
             lobbyEvents.put("Game Over", ge.isHost ? "player1" : "player2");
