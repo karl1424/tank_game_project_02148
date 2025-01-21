@@ -84,7 +84,7 @@ public class Join {
                     errorMessage = "CANNOT FIND THE LOBBY";
                     textBoxContent = "";
                     return;
-                } catch (NullPointerException e) {
+                } catch (IllegalStateException e) {
                     errorMessage = "LOBBY IS FULL";
                     textBoxContent = "";
                     return;

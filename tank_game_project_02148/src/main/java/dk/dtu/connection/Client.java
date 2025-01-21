@@ -95,7 +95,7 @@ public class Client {
     public void connectToLobby() throws InterruptedException, UnknownHostException, IOException {
         establishConnectionToLobby(lobbyID);
         if (!lobbyHandShake()) {
-            throw new NullPointerException();
+            throw new IllegalStateException();
         }
     }
 
