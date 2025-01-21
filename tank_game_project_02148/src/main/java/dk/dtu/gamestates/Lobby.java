@@ -52,6 +52,7 @@ public class Lobby {
                         client.startPos = true;
                         client.startGame = true;
                         client.sendStart();
+                        missingPlayer = false;
                         Gamestate.state = Gamestate.PLAYING;
                     } else {
                         missingPlayer = true;
