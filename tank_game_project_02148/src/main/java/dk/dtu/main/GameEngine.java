@@ -78,25 +78,19 @@ public class GameEngine extends Pane implements Runnable {
     @Override
     public void run() {
         double drawInterval = 1000000000 / fps;
-        double delta = 0;
+        double deltaTime = 0;
         long lastTime = System.nanoTime();
         long currentTime;
-        long timer = 0;
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
-            timer += currentTime - lastTime;
+            deltaTime += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
 
-            if (delta >= 1) {
+            if (deltaTime >= 1) {
                 update();
                 repaint(gc);
-                delta--;
-            }
-
-            if (timer >= 1000000000) {
-                timer = 0;
+                deltaTime--;
             }
         }
     }

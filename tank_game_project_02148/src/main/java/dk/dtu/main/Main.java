@@ -12,8 +12,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        GameEngine gameLoop = new GameEngine();
-        Scene scene = new Scene(gameLoop);
+        GameEngine gameEngine = new GameEngine();
+        Scene scene = new Scene(gameEngine);
 
         primaryStage.setTitle("Tank Game");
         primaryStage.setResizable(false);
@@ -23,6 +23,6 @@ public class Main extends Application {
             System.exit(0);
         });
         primaryStage.show();
-        gameLoop.requestFocus();
+        gameEngine.requestFocus();
     }
 }
