@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 
 public class GameEngine extends Pane implements Runnable {
     public boolean isHost = false;
-    public String IP = "10.209.242.14";
+    public String IP = "localhost";
 
     private final int rows = 36;
     private final int cols = 46;
