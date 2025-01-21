@@ -139,8 +139,8 @@ public class Client {
     public boolean readyToStart() {
         boolean bool = false;
         try {
-            if (lobbySend.queryp(new FormalField(Boolean.class)) != null) {
-                Object[] startBool = lobbySend.get(new FormalField(Boolean.class));
+            Object[] startBool = lobbySend.queryp(new FormalField(Boolean.class));
+            if (startBool != null) {
                 bool = (boolean) startBool[0];
             }
         } catch (InterruptedException e) {
