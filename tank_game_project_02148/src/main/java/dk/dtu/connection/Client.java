@@ -309,6 +309,7 @@ public class Client {
                         ge.isHost ? new ActualField("player2") : new ActualField("player1"));
                 winner = true;
                 checkGameOver = false;
+                projectileList.clear();
                 Gamestate.state = Gamestate.GAMEOVER;
                 System.out.println("Game Over");
 
